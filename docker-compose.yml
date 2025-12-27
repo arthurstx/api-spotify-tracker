@@ -1,0 +1,25 @@
+services:
+  api-gym:
+    image: bitnami/postgresql
+    container_name: api-spotify-tracker
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRESQL_DATABASE=apispotifytracker
+      - POSTGRESQL_USERNAME=db
+      - POSTGRESQL_PASSWORD=db
+    volumes:
+      - preinitdb:/docker-entrypoint-preinitdb.d
+      - data:/bitnami/postgresql
+      - initdb:/docker-entrypoint-initdb.d
+    restart: 'no'
+    networks:
+      - default
+
+volumes:
+  preinitdb:
+    external: false
+  data:
+    external: false
+  initdb:
+    external: false
