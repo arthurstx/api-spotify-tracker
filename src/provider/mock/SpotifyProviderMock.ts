@@ -2,9 +2,23 @@ import {
   SpotifyProvider,
   type SpotifyProviderGetMeResponse,
   type SpotifyProviderAuthenticationResponse,
+  SpotifyProviderRefreshTokenResponse,
 } from '../spotify-provider-repository'
 
 export class SpotifyProviderMock implements SpotifyProvider {
+  async refreshAcessToken(refreshToken: string) {
+    if (refreshToken != 'refresh_token') {
+      return null
+    }
+
+    const response: SpotifyProviderRefreshTokenResponse = {
+      accessToken: 'new-access-token',
+      expires_in: 3600,
+      newRefreshToken: 'new-refresh-token',
+    }
+    return response
+  }
+
   async getTokensByCode(code: string) {
     if (code != 'valid-code') {
       return null

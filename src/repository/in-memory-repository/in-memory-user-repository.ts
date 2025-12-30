@@ -6,6 +6,12 @@ import { UsersRepository } from '../user-repository'
 export class InMemoryUserRepository implements UsersRepository {
   public items: User[] = []
 
+  async findByUserId(id: string) {
+    const user = this.items.find((item) => item.id === id)
+
+    return user ? user : null
+  }
+
   async findBySpotifyId(id: string) {
     const user = this.items.find((item) => item.spotifyId === id)
 
@@ -15,7 +21,7 @@ export class InMemoryUserRepository implements UsersRepository {
   async create(data: UserCreateInput) {
     const user: User = {
       name: data.name ?? null,
-      id: randomUUID(),
+      id: data.id ? data.id : randomUUID(),
       spotifyId: data.spotifyId,
       email: data.email,
       accessToken: data.accessToken,
