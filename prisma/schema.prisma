@@ -12,3 +12,40 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id           String   @id @default(uuid())
+  spotifyId    String   @unique
+  name         String?
+  email        String   @unique
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime // expire token date
+
+  rankings DailyRanking[]
+}
+
+model Artist {
+  id        String  @id @default(uuid())
+  spotifyId String  @unique
+  name      String
+  genres    String
+  imageUrl  String?
+
+  rankings DailyRanking[]
+}
+
+model DailyRanking {
+  id         String   @id @default(uuid())
+  position   Int // 1 - 50
+  period     String // "short_term", "medium_term" ou "long_term"
+  capturedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  artist   Artist @relation(fields: [artistId], references: [id])
+  artistId String
+
+  @@unique([userId, artistId, period, capturedAt])
+}
