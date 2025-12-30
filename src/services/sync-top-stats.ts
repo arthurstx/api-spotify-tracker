@@ -1,8 +1,8 @@
-import { User } from '../../generated/prisma/browser'
 import { SpotifyProvider } from '../provider/spotify-provider-repository'
-import { UsersRepository } from '../repository/user-repository'
-import { RefreshTokenExpiredError } from './errors/refresh-token-expired-error'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { ArtistsRepository } from '../repository/artists-repository'
+import { RankingsRepository } from '../repository/rankings-repository'
+import { Artist } from '../../generated/prisma/browser'
+import dayjs from 'dayjs'
 
 interface SyncTopStatsUseCaseRequest {
   userId: string
@@ -14,41 +14,51 @@ interface SyncTopStatsUseCaseResponse {
 
 export class SyncTopStatsUseCase {
   constructor(
-    private userRepository: UsersRepository,
+    private artistsRepository: ArtistsRepository,
+    private rankingsRepository: RankingsRepository,
     private spotifyProvider: SpotifyProvider
   ) {}
 
   async execute({
     userId,
   }: SyncTopStatsUseCaseRequest): Promise<SyncTopStatsUseCaseResponse> {
-    let user: User | null
+    const topArtists = await this.spotifyProvider.getTopArtists()
+    const startoftheday = dayjs(new Date()).startOf('day')
 
-    user = await this.userRepository.findByUserId(userId)
+    let index = 0
 
-    if (!user) {
-      throw new UserNotFoundError()
+    let artist: Artist
+
+    for (const item of topArtists) {
+      const existingArtist = await this.artistsRepository.findById(item.id)
+
+      if (existingArtist) {
+        artist = await this.artistsRepository.update({
+          name: item.name,
+          genres: item.genres,
+          imageUrl: item.images[0]?.url ?? null,
+        })
+      } else {
+        artist = await this.artistsRepository.create({
+          spotifyId: item.id,
+          name: item.name,
+          genres: item.genres,
+        })
+      }
+
+      await this.rankingsRepository.createMany({
+        period: 'daily',
+        position: index + 1,
+        capturedAt: startoftheday.toDate(),
+        userId,
+        artistId: artist.id,
+      })
+
+      index++
     }
 
-    const { refreshToken } = user
-
-    const spotifyTokens = await this.spotifyProvider.refreshAcessToken(
-      refreshToken
-    )
-
-    if (!spotifyTokens) {
-      throw new RefreshTokenExpiredError()
+    return {
+      count: index,
     }
-
-    const { accessToken, expires_in, newRefreshToken } = spotifyTokens
-
-    const expiresAt = new Date(Date.now() + expires_in * 1000)
-
-    user.accessToken = accessToken
-    user.expiresAt = expiresAt
-    user.refreshToken = newRefreshToken ? newRefreshToken : user.refreshToken
-
-    user = await this.userRepository.update(user)
-
-    return { accessToken, expiresAt }
   }
 }

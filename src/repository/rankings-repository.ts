@@ -1,5 +1,5 @@
-import { Artist } from '../../generated/prisma/browser'
+import { Prisma } from '../../generated/prisma/browser'
 
 export interface RankingsRepository {
-  createMany(artist: Artist[]): Promise<boolean>
+  createMany(rankings: Prisma.DailyRankingCreateManyInput): Promise<void>
 }

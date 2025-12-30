@@ -1,6 +1,8 @@
 import { Artist, Prisma } from '../../generated/prisma/browser'
 
 export interface ArtistsRepository {
-  create(artist: Prisma.ArtistCreateInput): Promise<Artist>
-  update(artist: Artist): Promise<Artist>
+  findById(id: string): Promise<Artist | null>
+  create(data: Prisma.ArtistCreateInput): Promise<Artist>
+  //createMany(artists: Prisma.ArtistCreateInput[]): Promise<void>
+  update(data: Prisma.ArtistUpdateInput): Promise<Artist>
 }
