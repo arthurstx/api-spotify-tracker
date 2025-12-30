@@ -3,52 +3,150 @@ import {
   type SpotifyProviderGetMeResponse,
   type SpotifyProviderAuthenticationResponse,
   SpotifyProviderRefreshTokenResponse,
+  SpotifyAlbum,
+  type SpotifyArtist,
 } from '../spotify-provider-repository'
 
 export class SpotifyProviderMock implements SpotifyProvider {
-  async getTopArtists() {
-    const artists = [
+  async getTopTracks() {
+    const spotifyAlbumsMock: SpotifyAlbum[] = [
       {
-        id: '7Ln80lUS6He07XvHI8qqHH',
-        name: 'Foo Fighters',
-        genres: ['rock', 'alternative rock'],
-        popularity: 85,
-        followers: {
-          total: 12034567,
+        album_type: 'album',
+        total_tracks: 12,
+        available_markets: ['BR', 'US'],
+        external_urls: {
+          spotify: 'https://open.spotify.com/album/1',
         },
+        href: 'https://api.spotify.com/v1/albums/1',
+        id: '1',
         images: [
           {
-            url: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+            url: 'https://i.scdn.co/image/ab67616d00001e021111',
             height: 300,
             width: 300,
           },
         ],
-      },
-      {
-        id: '5K4W6rqBFWDnAN6FQUkS6x',
-        name: 'Kanye West',
-        genres: ['hip hop', 'rap'],
-        popularity: 92,
-        followers: {
-          total: 18123456,
-        },
-        images: [
+        name: 'Hybrid Theory',
+        release_date: '2000-10-24',
+        release_date_precision: 'day',
+        type: 'album',
+        uri: 'spotify:album:1',
+        artists: [
           {
-            url: 'https://i.scdn.co/image/ab6761610000e5eb4c8c0b5e7b5f7c5a8f2e1b3a',
-            height: 640,
-            width: 640,
+            external_urls: {
+              spotify: 'https://open.spotify.com/artist/a1',
+            },
+            href: 'https://api.spotify.com/v1/artists/a1',
+            id: 'a1',
+            name: 'Linkin Park',
+            type: 'artist',
+            uri: 'spotify:artist:a1',
           },
         ],
       },
       {
-        id: '1vCWHaC5f2uS3yhpwWbIA6',
-        name: 'Avicii',
-        genres: ['edm', 'electronic', 'dance'],
-        popularity: 80,
-        followers: {
-          total: 21567890,
+        album_type: 'album',
+        total_tracks: 10,
+        available_markets: ['BR', 'CA'],
+        external_urls: {
+          spotify: 'https://open.spotify.com/album/2',
         },
-        images: [],
+        href: 'https://api.spotify.com/v1/albums/2',
+        id: '2',
+        images: [
+          {
+            url: 'https://i.scdn.co/image/ab67616d00001e022222',
+            height: 300,
+            width: 300,
+          },
+        ],
+        name: 'Back in Black',
+        release_date: '1980-07-25',
+        release_date_precision: 'day',
+        type: 'album',
+        uri: 'spotify:album:2',
+        artists: [
+          {
+            external_urls: {
+              spotify: 'https://open.spotify.com/artist/a2',
+            },
+            href: 'https://api.spotify.com/v1/artists/a2',
+            id: 'a2',
+            name: 'AC/DC',
+            type: 'artist',
+            uri: 'spotify:artist:a2',
+          },
+        ],
+      },
+      {
+        album_type: 'compilation',
+        total_tracks: 9,
+        available_markets: ['BR', 'IT'],
+        external_urls: {
+          spotify: 'https://open.spotify.com/album/3',
+        },
+        href: 'https://api.spotify.com/v1/albums/3',
+        id: '3',
+        images: [
+          {
+            url: 'https://i.scdn.co/image/ab67616d00001e023333',
+            height: 300,
+            width: 300,
+          },
+        ],
+        name: 'Greatest Hits',
+        release_date: '1981-12',
+        release_date_precision: 'month',
+        type: 'album',
+        uri: 'spotify:album:3',
+        artists: [
+          {
+            external_urls: {
+              spotify: 'https://open.spotify.com/artist/a3',
+            },
+            href: 'https://api.spotify.com/v1/artists/a3',
+            id: 'a3',
+            name: 'Queen',
+            type: 'artist',
+            uri: 'spotify:artist:a3',
+          },
+        ],
+      },
+    ]
+
+    return spotifyAlbumsMock
+  }
+  async getTopArtists() {
+    const artists: SpotifyArtist[] = [
+      {
+        id: '1dfeR4HaWDbWqFHLkxsg1d',
+        name: 'Queen',
+        type: 'artist',
+        uri: 'spotify:artist:1dfeR4HaWDbWqFHLkxsg1d',
+        href: 'https://api.spotify.com/v1/artists/1dfeR4HaWDbWqFHLkxsg1d',
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/1dfeR4HaWDbWqFHLkxsg1d',
+        },
+      },
+      {
+        id: '3WrFJ7ztbogyGnTHbHJFl2',
+        name: 'The Beatles',
+        type: 'artist',
+        uri: 'spotify:artist:3WrFJ7ztbogyGnTHbHJFl2',
+        href: 'https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2',
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2',
+        },
+      },
+      {
+        id: '711MCceyCBcFnzjGY4Q7Un',
+        name: 'AC/DC',
+        type: 'artist',
+        uri: 'spotify:artist:711MCceyCBcFnzjGY4Q7Un',
+        href: 'https://api.spotify.com/v1/artists/711MCceyCBcFnzjGY4Q7Un',
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/711MCceyCBcFnzjGY4Q7Un',
+        },
       },
     ]
     return artists
@@ -85,6 +183,8 @@ export class SpotifyProviderMock implements SpotifyProvider {
       return null
     }
     const response: SpotifyProviderGetMeResponse = {
+      displayName: 'jhon doe',
+      imageUrl: 'imageurl',
       email: 'jhondoe@example.com',
       spotifyId: 'spotify_id',
     }

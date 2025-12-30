@@ -20,13 +20,16 @@ export class InMemoryUserRepository implements UsersRepository {
 
   async create(data: UserCreateInput) {
     const user: User = {
-      name: data.name ?? null,
+      displayName: data.displayName ?? null,
       id: data.id ? data.id : randomUUID(),
       spotifyId: data.spotifyId,
-      email: data.email,
+      email: data.email ?? null,
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
-      expiresAt: new Date(data.expiresAt),
+      tokenExpiresAt: new Date(data.tokenExpiresAt),
+      createdAt: new Date(),
+      imageUrl: data.imageUrl ?? null,
+      updatedAt: new Date(),
     }
     this.items.push(user)
     return user

@@ -30,11 +30,12 @@ describe('Authenticate use case', () => {
 
   it('should update user if already exists', async () => {
     const existingUser = await userRepository.create({
+      displayName: 'jhon doe',
       spotifyId: 'spotify_id',
       email: 'old@email.com',
       accessToken: 'old_token',
       refreshToken: 'old_refresh',
-      expiresAt: new Date(),
+      tokenExpiresAt: new Date(),
     })
 
     const user = await sut.execute({

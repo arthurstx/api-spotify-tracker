@@ -35,9 +35,9 @@ export class authenticateUserUseCase {
       throw new GetProfileError()
     }
 
-    const { spotifyId, email } = spotifyPorfile
+    const { spotifyId, email, displayName, imageUrl } = spotifyPorfile
 
-    const expiresAt = new Date(Date.now() + expires_in * 1000)
+    const tokenExpiresAt = new Date(Date.now() + expires_in * 1000)
 
     const userExists = await this.userRepository.findBySpotifyId(spotifyId)
 
@@ -45,7 +45,7 @@ export class authenticateUserUseCase {
 
     if (userExists) {
       userExists.accessToken = accessToken
-      userExists.expiresAt = expiresAt
+      userExists.tokenExpiresAt = tokenExpiresAt
       userExists.refreshToken = refreshToken
 
       user = userExists
@@ -53,9 +53,11 @@ export class authenticateUserUseCase {
       user = await this.userRepository.update(user)
     } else {
       user = await this.userRepository.create({
+        displayName,
+        imageUrl,
         spotifyId,
         accessToken,
-        expiresAt,
+        tokenExpiresAt,
         refreshToken,
         email,
       })

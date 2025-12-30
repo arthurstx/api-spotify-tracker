@@ -26,7 +26,8 @@ describe('Refresh token use case', () => {
       email: 'jhondoe@email.com',
       accessToken: 'old_token',
       refreshToken: 'refresh_token',
-      expiresAt: new Date(),
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
     })
 
     await sut.execute({ userId })
@@ -51,7 +52,8 @@ describe('Refresh token use case', () => {
       email: 'jhondoe@email.com',
       accessToken: 'old_token',
       refreshToken: 'refresh_token',
-      expiresAt: new Date(),
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
     })
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -65,7 +67,6 @@ describe('Refresh token use case', () => {
 
     await sut.execute({ userId })
 
-    console.log(user)
     const response = await spotifyProvider.refreshAcessToken(userId)
 
     if (!response) {
@@ -83,7 +84,8 @@ describe('Refresh token use case', () => {
       email: 'jhondoe@email.com',
       accessToken: 'old_token',
       refreshToken: 'old_refresh',
-      expiresAt: new Date(),
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
     })
 
     await expect(sut.execute({ userId: 'invalid-id' })).rejects.toBeInstanceOf(
@@ -100,7 +102,8 @@ describe('Refresh token use case', () => {
       email: 'jhondoe@email.com',
       accessToken: 'old_token',
       refreshToken: 'invalid-token',
-      expiresAt: new Date(),
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
     })
 
     spotifyProvider.refreshAcessToken = async () => null

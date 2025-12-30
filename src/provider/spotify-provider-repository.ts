@@ -5,6 +5,8 @@ export interface SpotifyProviderAuthenticationResponse {
 }
 
 export interface SpotifyProviderGetMeResponse {
+  displayName: string
+  imageUrl: string
   spotifyId: string
   email: string
 }
@@ -18,16 +20,47 @@ export interface SpotifyProviderRefreshTokenResponse {
 export interface SpotifyArtist {
   id: string
   name: string
-  genres: string[]
-  popularity: number
-  followers: {
-    total: number
+  type: 'artist'
+  uri: string
+
+  href: string
+  external_urls: {
+    spotify: string
   }
-  images: {
-    url: string
-    height: number
-    width: number
-  }[]
+}
+
+export interface SpotifyImage {
+  url: string
+  height: number
+  width: number
+}
+
+export interface SpotifyAlbum {
+  album_type: 'album' | 'single' | 'compilation'
+  total_tracks: number
+  available_markets: string[]
+
+  external_urls: {
+    spotify: string
+  }
+
+  href: string
+  id: string
+
+  images: SpotifyImage[]
+
+  name: string
+  release_date: string
+  release_date_precision: 'year' | 'month' | 'day'
+
+  restrictions?: {
+    reason: string
+  }
+
+  type: 'album'
+  uri: string
+
+  artists: SpotifyArtist[]
 }
 
 export interface SpotifyProvider {

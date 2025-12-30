@@ -10,7 +10,7 @@ interface RefreshTokenUseCaseRequest {
 
 interface RefreshTokenUseCaseResponse {
   accessToken: string
-  expiresAt: Date
+  tokenExpiresAt: Date
 }
 
 export class RefreshTokenUseCase {
@@ -42,14 +42,14 @@ export class RefreshTokenUseCase {
 
     const { accessToken, expires_in, newRefreshToken } = spotifyTokens
 
-    const expiresAt = new Date(Date.now() + expires_in * 1000)
+    const tokenExpiresAt = new Date(Date.now() + expires_in * 1000)
 
     user.accessToken = accessToken
-    user.expiresAt = expiresAt
+    user.tokenExpiresAt = tokenExpiresAt
     user.refreshToken = newRefreshToken ? newRefreshToken : user.refreshToken
 
     user = await this.userRepository.update(user)
 
-    return { accessToken, expiresAt }
+    return { accessToken, tokenExpiresAt }
   }
 }
