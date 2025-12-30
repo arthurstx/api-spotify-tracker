@@ -15,7 +15,23 @@ export interface SpotifyProviderRefreshTokenResponse {
   expires_in: number
 }
 
+export interface SpotifyArtist {
+  id: string
+  name: string
+  genres: string[]
+  popularity: number
+  followers: {
+    total: number
+  }
+  images: {
+    url: string
+    height: number
+    width: number
+  }[]
+}
+
 export interface SpotifyProvider {
+  getTopArtists(): Promise<SpotifyArtist[]>
   getTokensByCode(
     code: string
   ): Promise<SpotifyProviderAuthenticationResponse | null>

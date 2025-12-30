@@ -26,10 +26,10 @@ model User {
 }
 
 model Artist {
-  id        String  @id @default(uuid())
-  spotifyId String  @unique
+  id        String   @id @default(uuid())
+  spotifyId String   @unique
   name      String
-  genres    String
+  genres    String[]
   imageUrl  String?
 
   rankings DailyRanking[]
