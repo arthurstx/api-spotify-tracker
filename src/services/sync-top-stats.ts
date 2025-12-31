@@ -11,12 +11,9 @@ import { ArtistRankingsRepository } from '../repository/artist-rankings-reposito
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
-import {
-  Artist,
-  Prisma,
-  TimeRange,
-  Track,
-} from '../../generated/prisma/browser'
+import { Artist, TimeRange, Track } from '../../generated/prisma/browser'
+import { UserNotFoundError } from './errors/user- not-found-erro'
+import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 
 interface SyncTopStatsUseCaseRequest {
   userId: string
@@ -51,10 +48,8 @@ function mapExternalArtisToArtistRanking(
   snapshotId: string
 ) {
   return {
-    snapshot:
-      snapshotId as Prisma.SnapshotCreateNestedOneWithoutArtistRankingsInput,
-    artist:
-      rawArtist.id as Prisma.ArtistCreateNestedOneWithoutArtistRankingsInput,
+    snapshotId: snapshotId,
+    artistId: rawArtist.id,
     position: index + 1,
     timeRange: 'MEDIUM_TERM' as TimeRange,
   }
@@ -66,9 +61,8 @@ function mapExternalTracksToTrackstRanking(
   snapshotId: string
 ) {
   return {
-    snapshot:
-      snapshotId as Prisma.SnapshotCreateNestedOneWithoutArtistRankingsInput,
-    track: rawTrack.id as Prisma.TrackCreateNestedOneWithoutTrackRankingsInput,
+    snapshotId: snapshotId,
+    trackId: rawTrack.id,
     position: index + 1,
     timeRange: 'MEDIUM_TERM' as TimeRange,
   }
@@ -91,7 +85,7 @@ export class SyncTopStatsUseCase {
     const user = await this.usersRepository.findByUserId(userId)
 
     if (!user) {
-      throw new Error()
+      throw new UserNotFoundError()
     }
 
     if (user.tokenExpiresAt < new Date()) {
@@ -111,7 +105,7 @@ export class SyncTopStatsUseCase {
     )
 
     if (existingSnapshot) {
-      throw Error()
+      throw new SyncAlreadyDoneError()
     }
 
     const topArtistsResponse = await this.spotifyProvider.getTopArtists()
