@@ -1,5 +1,5 @@
-import { Artist, Prisma } from '../../generated/prisma/browser'
+import { Prisma, Track } from '../../generated/prisma/browser'
 
 export interface TracksRepository {
-  upsertMany(data: Prisma.TrackCreateInput): Promise<Artist>
+  upsertMany(data: Prisma.TrackCreateInput[]): Promise<Track[]>
 }

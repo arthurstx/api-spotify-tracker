@@ -2,7 +2,6 @@ import {
   SpotifyArtist,
   SpotifyProvider,
   SpotifyTrack,
-  Track,
 } from '../provider/spotify-provider-repository'
 import { ArtistsRepository } from '../repository/artists-repository'
 import dayjs from 'dayjs'
@@ -12,6 +11,12 @@ import { ArtistRankingsRepository } from '../repository/artist-rankings-reposito
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
+import {
+  Artist,
+  Prisma,
+  TimeRange,
+  Track,
+} from '../../generated/prisma/browser'
 
 interface SyncTopStatsUseCaseRequest {
   userId: string
@@ -40,6 +45,35 @@ function mapExternalTrackToTrack(rawTrack: SpotifyTrack) {
   } as Track
 }
 
+function mapExternalArtisToArtistRanking(
+  rawArtist: Artist,
+  index: number,
+  snapshotId: string
+) {
+  return {
+    snapshot:
+      snapshotId as Prisma.SnapshotCreateNestedOneWithoutArtistRankingsInput,
+    artist:
+      rawArtist.id as Prisma.ArtistCreateNestedOneWithoutArtistRankingsInput,
+    position: index + 1,
+    timeRange: 'MEDIUM_TERM' as TimeRange,
+  }
+}
+
+function mapExternalTracksToTrackstRanking(
+  rawTrack: Track,
+  index: number,
+  snapshotId: string
+) {
+  return {
+    snapshot:
+      snapshotId as Prisma.SnapshotCreateNestedOneWithoutArtistRankingsInput,
+    track: rawTrack.id as Prisma.TrackCreateNestedOneWithoutTrackRankingsInput,
+    position: index + 1,
+    timeRange: 'MEDIUM_TERM' as TimeRange,
+  }
+}
+
 export class SyncTopStatsUseCase {
   constructor(
     private usersRepository: UsersRepository,
@@ -47,7 +81,7 @@ export class SyncTopStatsUseCase {
     private artistRankingsRepository: ArtistRankingsRepository,
     private tracksRepository: TracksRepository,
     private trackRankingsRepository: TrackRankingsRepository,
-    private snapShot: SnapShotsRepository,
+    private snapShotRepository: SnapShotsRepository,
     private spotifyProvider: SpotifyProvider
   ) {}
 
@@ -71,7 +105,7 @@ export class SyncTopStatsUseCase {
 
     const startoftheday = dayjs(new Date()).startOf('day').toDate()
 
-    const existingSnapshot = await this.snapShot.findByUserAndDate(
+    const existingSnapshot = await this.snapShotRepository.findByUserAndDate(
       userId,
       startoftheday
     )
@@ -82,7 +116,26 @@ export class SyncTopStatsUseCase {
 
     const topArtistsResponse = await this.spotifyProvider.getTopArtists()
     const topTracksResponse = await this.spotifyProvider.getTopTracks()
-    const Artist = topArtistsResponse.map(mapExternalArtistToArtist)
-    const track = topTracksResponse.map(mapExternalTrackToTrack)
+    const NormalizeArtist = topArtistsResponse.map(mapExternalArtistToArtist)
+    const NormalizeTrack = topTracksResponse.map(mapExternalTrackToTrack)
+
+    const snapShot = await this.snapShotRepository.create(userId, startoftheday)
+
+    const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
+    const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)
+
+    const artistRanking = artists.map((item, index) =>
+      mapExternalArtisToArtistRanking(item, index, snapShot.id)
+    )
+
+    const tracksRanking = tracks.map((item, index) =>
+      mapExternalTracksToTrackstRanking(item, index, snapShot.id)
+    )
+
+    await this.artistRankingsRepository.createMany(artistRanking)
+    await this.trackRankingsRepository.createMany(tracksRanking)
+
+    const count = artistRanking.length + tracksRanking.length
+    return { count }
   }
 }
