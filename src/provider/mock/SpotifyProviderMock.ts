@@ -3,34 +3,36 @@ import {
   type SpotifyProviderGetMeResponse,
   type SpotifyProviderAuthenticationResponse,
   SpotifyProviderRefreshTokenResponse,
-  SpotifyAlbum,
   type SpotifyArtist,
+  SpotifyTrack,
 } from '../spotify-provider-repository'
 
 export class SpotifyProviderMock implements SpotifyProvider {
   async getTopTracks() {
-    const spotifyAlbumsMock: SpotifyAlbum[] = [
+    const spotifyAlbumsMock: SpotifyTrack[] = [
       {
-        album_type: 'album',
-        total_tracks: 12,
-        available_markets: ['BR', 'US'],
-        external_urls: {
-          spotify: 'https://open.spotify.com/album/1',
-        },
-        href: 'https://api.spotify.com/v1/albums/1',
-        id: '1',
-        images: [
-          {
-            url: 'https://i.scdn.co/image/ab67616d00001e021111',
-            height: 300,
-            width: 300,
+        album: {
+          album_type: 'album' as const,
+          total_tracks: 12,
+          available_markets: ['BR', 'US'],
+          external_urls: {
+            spotify: 'https://open.spotify.com/album/1',
           },
-        ],
-        name: 'Hybrid Theory',
-        release_date: '2000-10-24',
-        release_date_precision: 'day',
-        type: 'album',
-        uri: 'spotify:album:1',
+          href: 'https://api.spotify.com/v1/albums/1',
+          id: '1',
+          images: [
+            {
+              url: 'https://i.scdn.co/image/ab67616d00001e021111',
+              height: 300,
+              width: 300,
+            },
+          ],
+          name: 'Hybrid Theory',
+          release_date: '2000-10-24',
+          release_date_precision: 'day',
+          type: 'album',
+          uri: 'spotify:album:1',
+        },
         artists: [
           {
             external_urls: {
@@ -41,30 +43,34 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'Linkin Park',
             type: 'artist',
             uri: 'spotify:artist:a1',
+            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
           },
         ],
+        duration_ms: 202000,
       },
       {
-        album_type: 'album',
-        total_tracks: 10,
-        available_markets: ['BR', 'CA'],
-        external_urls: {
-          spotify: 'https://open.spotify.com/album/2',
-        },
-        href: 'https://api.spotify.com/v1/albums/2',
-        id: '2',
-        images: [
-          {
-            url: 'https://i.scdn.co/image/ab67616d00001e022222',
-            height: 300,
-            width: 300,
+        album: {
+          album_type: 'album' as const,
+          total_tracks: 10,
+          available_markets: ['BR', 'CA'],
+          external_urls: {
+            spotify: 'https://open.spotify.com/album/2',
           },
-        ],
-        name: 'Back in Black',
-        release_date: '1980-07-25',
-        release_date_precision: 'day',
-        type: 'album',
-        uri: 'spotify:album:2',
+          href: 'https://api.spotify.com/v1/albums/2',
+          id: '2',
+          images: [
+            {
+              url: 'https://i.scdn.co/image/ab67616d00001e022222',
+              height: 300,
+              width: 300,
+            },
+          ],
+          name: 'Back in Black',
+          release_date: '1980-07-25',
+          release_date_precision: 'day',
+          type: 'album',
+          uri: 'spotify:album:2',
+        },
         artists: [
           {
             external_urls: {
@@ -75,30 +81,34 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'AC/DC',
             type: 'artist',
             uri: 'spotify:artist:a2',
+            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
           },
         ],
+        duration_ms: 210000,
       },
       {
-        album_type: 'compilation',
-        total_tracks: 9,
-        available_markets: ['BR', 'IT'],
-        external_urls: {
-          spotify: 'https://open.spotify.com/album/3',
-        },
-        href: 'https://api.spotify.com/v1/albums/3',
-        id: '3',
-        images: [
-          {
-            url: 'https://i.scdn.co/image/ab67616d00001e023333',
-            height: 300,
-            width: 300,
+        album: {
+          album_type: 'compilation' as const,
+          total_tracks: 9,
+          available_markets: ['BR', 'IT'],
+          external_urls: {
+            spotify: 'https://open.spotify.com/album/3',
           },
-        ],
-        name: 'Greatest Hits',
-        release_date: '1981-12',
-        release_date_precision: 'month',
-        type: 'album',
-        uri: 'spotify:album:3',
+          href: 'https://api.spotify.com/v1/albums/3',
+          id: '3',
+          images: [
+            {
+              url: 'https://i.scdn.co/image/ab67616d00001e023333',
+              height: 300,
+              width: 300,
+            },
+          ],
+          name: 'Greatest Hits',
+          release_date: '1981-12',
+          release_date_precision: 'month',
+          type: 'album',
+          uri: 'spotify:album:3',
+        },
         artists: [
           {
             external_urls: {
@@ -109,8 +119,10 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'Queen',
             type: 'artist',
             uri: 'spotify:artist:a3',
+            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
           },
         ],
+        duration_ms: 215000,
       },
     ]
 
@@ -123,6 +135,7 @@ export class SpotifyProviderMock implements SpotifyProvider {
         name: 'Queen',
         type: 'artist',
         uri: 'spotify:artist:1dfeR4HaWDbWqFHLkxsg1d',
+        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
         href: 'https://api.spotify.com/v1/artists/1dfeR4HaWDbWqFHLkxsg1d',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/1dfeR4HaWDbWqFHLkxsg1d',
@@ -133,6 +146,8 @@ export class SpotifyProviderMock implements SpotifyProvider {
         name: 'The Beatles',
         type: 'artist',
         uri: 'spotify:artist:3WrFJ7ztbogyGnTHbHJFl2',
+        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+
         href: 'https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2',
@@ -143,6 +158,8 @@ export class SpotifyProviderMock implements SpotifyProvider {
         name: 'AC/DC',
         type: 'artist',
         uri: 'spotify:artist:711MCceyCBcFnzjGY4Q7Un',
+        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+
         href: 'https://api.spotify.com/v1/artists/711MCceyCBcFnzjGY4Q7Un',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/711MCceyCBcFnzjGY4Q7Un',

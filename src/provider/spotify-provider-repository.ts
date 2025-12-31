@@ -22,6 +22,13 @@ export interface SpotifyArtist {
   name: string
   type: 'artist'
   uri: string
+  image: [
+    {
+      url: string
+      height: number
+      width: number
+    }
+  ]
 
   href: string
   external_urls: {
@@ -59,11 +66,18 @@ export interface SpotifyAlbum {
 
   type: 'album'
   uri: string
+}
+
+export interface SpotifyTrack {
+  album: SpotifyAlbum
 
   artists: SpotifyArtist[]
+
+  duration_ms: number
 }
 
 export interface SpotifyProvider {
+  getTopTracks(): Promise<SpotifyTrack[]>
   getTopArtists(): Promise<SpotifyArtist[]>
   getTokensByCode(
     code: string
