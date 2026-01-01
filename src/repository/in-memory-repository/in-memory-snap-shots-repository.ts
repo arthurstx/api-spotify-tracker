@@ -6,23 +6,22 @@ import { randomUUID } from 'node:crypto'
 export class InMemorySnapShotsRepository implements SnapShotsRepository {
   public items: Snapshot[] = []
   async findByUserAndDate(userId: string, date: Date) {
-    const startOfTheDay = dayjs(date).startOf('day')
-    const endfOfTheDay = dayjs(date).endOf('day')
+    const startOfTheDay = dayjs(date).startOf('date')
+    const endOfTheDay = dayjs(date).endOf('date')
 
-    const snapShots = this.items.find((item) => {
-      const snapShotsInDate = dayjs(item.createdAt)
-      const snapShotsInSameDay =
-        snapShotsInDate.isAfter(startOfTheDay) &&
-        snapShotsInDate.isBefore(endfOfTheDay)
+    const snapShotOnSameDate = this.items.find((item) => {
+      const snapShotDate = dayjs(item.createdAt)
+      const isOnSameDate =
+        snapShotDate.isAfter(startOfTheDay) &&
+        snapShotDate.isBefore(endOfTheDay)
 
-      return item.id === userId && snapShotsInSameDay
+      return item.userId === userId && isOnSameDate
     })
 
-    if (!snapShots) {
+    if (!snapShotOnSameDate) {
       return null
     }
-
-    return snapShots
+    return snapShotOnSameDate
   }
   async create(userId: string, date: Date) {
     const snapShots = {
@@ -32,6 +31,7 @@ export class InMemorySnapShotsRepository implements SnapShotsRepository {
       userId: userId,
     } as Snapshot
 
+    this.items.push(snapShots)
     return snapShots
   }
 }

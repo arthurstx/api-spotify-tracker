@@ -4,7 +4,6 @@ import {
   SpotifyTrack,
 } from '../provider/spotify-provider-repository'
 import { ArtistsRepository } from '../repository/artists-repository'
-import dayjs from 'dayjs'
 import { TracksRepository } from '../repository/tracks-repository'
 import { TrackRankingsRepository } from '../repository/track-rankings-repository'
 import { ArtistRankingsRepository } from '../repository/artist-rankings-repository'
@@ -97,11 +96,9 @@ export class SyncTopStatsUseCase {
       refreshToken.execute({ userId })
     }
 
-    const startoftheday = dayjs(new Date()).startOf('day').toDate()
-
     const existingSnapshot = await this.snapShotRepository.findByUserAndDate(
       userId,
-      startoftheday
+      new Date()
     )
 
     if (existingSnapshot) {
@@ -113,7 +110,7 @@ export class SyncTopStatsUseCase {
     const NormalizeArtist = topArtistsResponse.map(mapExternalArtistToArtist)
     const NormalizeTrack = topTracksResponse.map(mapExternalTrackToTrack)
 
-    const snapShot = await this.snapShotRepository.create(userId, startoftheday)
+    const snapShot = await this.snapShotRepository.create(userId, new Date())
 
     const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
     const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)

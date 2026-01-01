@@ -13,6 +13,8 @@ import { InMemoryTrackRankingsRepository } from '../repository/in-memory-reposit
 import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snap-shots-repository'
 import { InMemoryArtistRankingRepository } from '../repository/in-memory-repository/in-memory-artist-rankings-repository'
 import { SyncTopStatsUseCase } from './sync-top-stats'
+import { UserNotFoundError } from './errors/user- not-found-erro'
+import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 
 let userRepository: UsersRepository
 let artistsRepository: ArtistsRepository
@@ -59,5 +61,50 @@ describe('sync top stats use case', () => {
     const { count } = await sut.execute({ userId })
 
     expect(count).toEqual(expect.any(Number))
+  })
+
+  it('should  be able to refresh token in sync top stats', async () => {
+    const userId = 'user-01'
+
+    const user = await userRepository.create({
+      id: userId,
+      spotifyId: 'spotify_id',
+      email: 'jhondoe@email.com',
+      accessToken: 'old_token',
+      refreshToken: 'refresh_token',
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(1),
+    })
+
+    const { count } = await sut.execute({ userId })
+
+    expect(user.accessToken).toEqual('new-access-token')
+    expect(count).toEqual(expect.any(Number))
+  })
+
+  it('should not be able to create snap shot in same day', async () => {
+    const userId = 'user-01'
+
+    await userRepository.create({
+      id: userId,
+      spotifyId: 'spotify_id',
+      email: 'jhondoe@email.com',
+      accessToken: 'old_token',
+      refreshToken: 'refresh_token',
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
+    })
+    await snapShotsRepository.create(userId, new Date())
+
+    await expect(sut.execute({ userId })).rejects.toBeInstanceOf(
+      SyncAlreadyDoneError
+    )
+  })
+  it('should not be able to sync top stats without user', async () => {
+    const userId = 'user-01'
+
+    await expect(sut.execute({ userId })).rejects.toBeInstanceOf(
+      UserNotFoundError
+    )
   })
 })
