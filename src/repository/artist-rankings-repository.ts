@@ -4,12 +4,16 @@ import {
   TimeRange,
 } from '../../generated/prisma/browser'
 
+export interface ArtistRankingsProps {
+  artistId: string
+  timeRange: TimeRange
+  snapShotId: string
+}
+
 export interface ArtistRankingsRepository {
-  fetchManyTrackRankings(
-    artist: string,
-    timeRange: TimeRange,
-    snapShotId: string
-  ): Promise<ArtistRanking[]>
+  fetchManyArtistRankings(
+    props: ArtistRankingsProps
+  ): Promise<ArtistRanking[] | []>
   createMany(
     data: Prisma.ArtistRankingUncheckedCreateInput[]
   ): Promise<ArtistRanking[]>

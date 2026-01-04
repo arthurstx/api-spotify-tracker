@@ -5,6 +5,19 @@ import { randomUUID } from 'node:crypto'
 
 export class InMemorySnapShotsRepository implements SnapShotsRepository {
   public items: Snapshot[] = []
+
+  async fetchManyByUserIdAndPeriod(
+    userId: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    const snapShot = this.items.filter(
+      (item) =>
+        item.userId === userId && startDate <= item.date && endDate >= item.date
+    )
+
+    return snapShot
+  }
   async findByUserAndDate(userId: string, date: Date) {
     const startOfTheDay = dayjs(date).startOf('date')
     const endOfTheDay = dayjs(date).endOf('date')

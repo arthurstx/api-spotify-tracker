@@ -5,6 +5,7 @@ import { ArtistRankingsRepository } from '../repository/artist-rankings-reposito
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { TrackRankingsRepository } from '../repository/track-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
+import { UserNotFoundError } from './errors/user- not-found-erro'
 
 interface GetTopHistoryUseCaseRequest {
   userId: string
@@ -15,11 +16,10 @@ interface GetTopHistoryUseCaseRequest {
 }
 
 interface GetTopHistoryUseCaseResponse {
-  history:{
-
+  history: {
     date: Date
     ranking: number
-  }
+  }[]
 }
 
 export class GetTopHistoryUseCase {
@@ -36,13 +36,42 @@ export class GetTopHistoryUseCase {
     periodInDays,
     timeRange,
     userId,
-  }: GetTopHistoryUseCaseRequest): Promise<GetTopHistoryUseCaseResponse[]> {
-    const snapShots = await this.snapShotRepository.fetchManyByUserId(userId)
+  }: GetTopHistoryUseCaseRequest): Promise<GetTopHistoryUseCaseResponse> {
+    const user = await this.usersRepository.findByUserId(userId)
 
-    const endDate = dayjs(new Date()).startOf('date')
-    const startDate = dayjs(endDate).subtract(periodInDays, 'day')
+    if (!user) {
+      throw new UserNotFoundError()
+    }
 
-    snapShots.
+    const endDate = dayjs().startOf('day')
+    const startDate = endDate.subtract(periodInDays, 'day')
 
+    const snapShots = await this.snapShotRepository.fetchManyByUserIdAndPeriod(
+      userId,
+      startDate.toDate(),
+      endDate.toDate()
+    )
+
+    const historyNested = await Promise.all(
+      snapShots.map(async (item) => {
+        if (entityType !== 'ARTIST') return []
+
+        const artistsRanking =
+          await this.artistRankingsRepository.fetchManyArtistRankings({
+            snapShotId: item.id,
+            timeRange,
+            artistId: entityId,
+          })
+
+        return artistsRanking.map((artist) => ({
+          date: item.createdAt,
+          ranking: artist.position,
+        }))
+      })
+    )
+
+    const history = historyNested.flat()
+
+    return { history }
   }
 }
