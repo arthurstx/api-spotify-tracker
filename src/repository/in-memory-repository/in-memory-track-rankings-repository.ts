@@ -1,18 +1,26 @@
 import { randomUUID } from 'node:crypto'
-import { TimeRange, TrackRanking } from '../../../generated/prisma/browser'
+import { TrackRanking } from '../../../generated/prisma/browser'
 import { TrackRankingUncheckedCreateInput } from '../../../generated/prisma/models'
-import { TrackRankingsRepository } from '../track-rankings-repository'
+import {
+  TrackRankingsProps,
+  TrackRankingsRepository,
+} from '../track-rankings-repository'
 
 export class InMemoryTrackRankingsRepository
   implements TrackRankingsRepository
 {
-  fetchManyTrackRankings(
-    artist: string,
-    timeRange: TimeRange,
-    snapShotId: string
-  ): Promise<TrackRanking[]> {
-    throw new Error('Method not implemented.')
+  async fetchManyTrackRankings(
+    props: TrackRankingsProps
+  ): Promise<TrackRanking[] | []> {
+    const trackRankings = this.items.filter(
+      (item) =>
+        props.trackId === item.trackId &&
+        props.snapShotId === item.snapshotId &&
+        item.timeRange === props.timeRange
+    )
+    return trackRankings
   }
+
   public items: TrackRanking[] = []
   async createMany(
     data: TrackRankingUncheckedCreateInput[]

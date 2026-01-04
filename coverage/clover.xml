@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1767294291406" clover="3.2.0">
-  <project timestamp="1767294291406" name="All files">
-    <metrics statements="143" coveredstatements="140" conditionals="66" coveredconditionals="49" methods="42" coveredmethods="42" elements="251" coveredelements="231" complexity="0" loc="143" ncloc="143" packages="4" files="15" classes="15"/>
+<coverage generated="1767559199447" clover="3.2.0">
+  <project timestamp="1767559199447" name="All files">
+    <metrics statements="172" coveredstatements="169" conditionals="81" coveredconditionals="65" methods="53" coveredmethods="53" elements="306" coveredelements="287" complexity="0" loc="172" ncloc="172" packages="4" files="16" classes="16"/>
     <package name="provider.mock">
       <metrics statements="16" coveredstatements="15" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
       <file name="SpotifyProviderMock.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/provider/mock/SpotifyProviderMock.ts">
@@ -25,13 +25,16 @@
       </file>
     </package>
     <package name="repository.in-memory-repository">
-      <metrics statements="49" coveredstatements="47" conditionals="38" coveredconditionals="24" methods="20" coveredmethods="20"/>
+      <metrics statements="58" coveredstatements="56" conditionals="47" coveredconditionals="34" methods="26" coveredmethods="26"/>
       <file name="in-memory-artist-rankings-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-artist-rankings-repository.ts">
-        <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="13" count="6" type="stmt"/>
-        <line num="20" count="2" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
+        <metrics statements="7" coveredstatements="7" conditionals="5" coveredconditionals="5" methods="4" coveredmethods="4"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="15" count="1" type="cond" truecount="3" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="22" count="9" type="stmt"/>
+        <line num="26" count="8" type="stmt"/>
+        <line num="33" count="4" type="stmt"/>
+        <line num="34" count="4" type="stmt"/>
       </file>
       <file name="in-memory-artists-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-artists-repository.ts">
         <metrics statements="8" coveredstatements="7" conditionals="6" coveredconditionals="2" methods="3" coveredmethods="3"/>
@@ -45,27 +48,33 @@
         <line num="23" count="0" type="stmt"/>
       </file>
       <file name="in-memory-snap-shots-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-snap-shots-repository.ts">
-        <metrics statements="13" coveredstatements="13" conditionals="8" coveredconditionals="7" methods="3" coveredmethods="3"/>
-        <line num="7" count="4" type="stmt"/>
-        <line num="9" count="3" type="stmt"/>
-        <line num="10" count="3" type="stmt"/>
-        <line num="12" count="3" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="15" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="18" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="21" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="2" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="27" count="3" type="stmt"/>
-        <line num="34" count="3" type="stmt"/>
-        <line num="35" count="3" type="stmt"/>
+        <metrics statements="16" coveredstatements="16" conditionals="11" coveredconditionals="10" methods="5" coveredmethods="5"/>
+        <line num="7" count="9" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="16" count="4" type="cond" truecount="3" falsecount="0"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="28" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="40" count="8" type="stmt"/>
+        <line num="47" count="8" type="stmt"/>
+        <line num="48" count="8" type="stmt"/>
       </file>
       <file name="in-memory-track-rankings-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-track-rankings-repository.ts">
-        <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="13" count="6" type="stmt"/>
-        <line num="20" count="2" type="stmt"/>
+        <metrics statements="7" coveredstatements="7" conditionals="5" coveredconditionals="4" methods="4" coveredmethods="4"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="17" count="2" type="cond" truecount="3" falsecount="0"/>
         <line num="21" count="2" type="stmt"/>
+        <line num="24" count="9" type="stmt"/>
+        <line num="28" count="9" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
       </file>
       <file name="in-memory-track-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-track-repository.ts">
         <metrics statements="8" coveredstatements="7" conditionals="6" coveredconditionals="2" methods="3" coveredmethods="3"/>
@@ -80,14 +89,14 @@
       </file>
       <file name="in-memory-user-repository.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/repository/in-memory-repository/in-memory-user-repository.ts">
         <metrics statements="12" coveredstatements="12" conditionals="14" coveredconditionals="11" methods="7" coveredmethods="7"/>
-        <line num="7" count="12" type="stmt"/>
-        <line num="10" count="10" type="stmt"/>
-        <line num="12" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="17" type="stmt"/>
+        <line num="10" count="15" type="stmt"/>
+        <line num="12" count="15" type="cond" truecount="2" falsecount="0"/>
         <line num="16" count="2" type="stmt"/>
         <line num="18" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="9" type="stmt"/>
-        <line num="34" count="9" type="stmt"/>
-        <line num="35" count="9" type="stmt"/>
+        <line num="22" count="13" type="stmt"/>
+        <line num="34" count="13" type="stmt"/>
+        <line num="35" count="13" type="stmt"/>
         <line num="38" count="5" type="stmt"/>
         <line num="40" count="5" type="cond" truecount="1" falsecount="1"/>
         <line num="41" count="5" type="stmt"/>
@@ -95,7 +104,7 @@
       </file>
     </package>
     <package name="services">
-      <metrics statements="73" coveredstatements="73" conditionals="22" coveredconditionals="20" methods="12" coveredmethods="12"/>
+      <metrics statements="93" coveredstatements="93" conditionals="28" coveredconditionals="26" methods="17" coveredmethods="17"/>
       <file name="authenticateUser.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/services/authenticateUser.ts">
         <metrics statements="20" coveredstatements="20" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
         <line num="17" count="4" type="stmt"/>
@@ -118,6 +127,29 @@
         <line num="53" count="1" type="stmt"/>
         <line num="55" count="1" type="stmt"/>
         <line num="66" count="2" type="stmt"/>
+      </file>
+      <file name="get-top-history.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/services/get-top-history.ts">
+        <metrics statements="20" coveredstatements="20" conditionals="6" coveredconditionals="6" methods="5" coveredmethods="5"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="28" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+        <line num="42" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="49" count="4" type="stmt"/>
+        <line num="55" count="4" type="stmt"/>
+        <line num="57" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="69" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="71" count="2" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="86" count="4" type="stmt"/>
+        <line num="88" count="4" type="stmt"/>
       </file>
       <file name="refresh-token.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/services/refresh-token.ts">
         <metrics statements="16" coveredstatements="16" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
@@ -199,7 +231,7 @@
       </file>
       <file name="user- not-found-erro.ts" path="/home/arthur/projetos/api-spotify/api-spotify-backend/src/services/errors/user- not-found-erro.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="3" count="2" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
       </file>
     </package>
   </project>

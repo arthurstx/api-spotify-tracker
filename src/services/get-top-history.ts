@@ -54,19 +54,32 @@ export class GetTopHistoryUseCase {
 
     const historyNested = await Promise.all(
       snapShots.map(async (item) => {
-        if (entityType !== 'ARTIST') return []
+        if (entityType === 'ARTIST') {
+          const artistsRanking =
+            await this.artistRankingsRepository.fetchManyArtistRankings({
+              snapShotId: item.id,
+              timeRange,
+              artistId: entityId,
+            })
 
-        const artistsRanking =
-          await this.artistRankingsRepository.fetchManyArtistRankings({
-            snapShotId: item.id,
-            timeRange,
-            artistId: entityId,
-          })
+          return artistsRanking.map((artist) => ({
+            date: item.createdAt,
+            ranking: artist.position,
+          }))
+        } else if (entityType === 'TRACK') {
+          const trackRanking =
+            await this.trackRankingsRepository.fetchManyTrackRankings({
+              snapShotId: item.id,
+              timeRange,
+              trackId: entityId,
+            })
 
-        return artistsRanking.map((artist) => ({
-          date: item.createdAt,
-          ranking: artist.position,
-        }))
+          return trackRanking.map((track) => ({
+            date: item.createdAt,
+            ranking: track.position,
+          }))
+        }
+        return []
       })
     )
 
