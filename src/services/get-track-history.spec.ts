@@ -3,7 +3,7 @@ import { GetTrackHistoryUseCase } from './get-track-history'
 import { UsersRepository } from '../repository/user-repository'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { InMemoryTrackReadRepository } from '../repository/in-memory-repository/in-memory-track-read-repository'
-import { InMemoryTrackRankingReadRepository } from '../repository/in-memory-track-ranking-read-repository'
+import { InMemoryTrackRankingReadRepository } from '../repository/in-memory-repository/in-memory-track-ranking-read-repository'
 import { TimeRange } from '../../generated/prisma/enums'
 
 let usersRepository: UsersRepository
@@ -79,8 +79,6 @@ describe('Get Track History Use Case', () => {
       trackId: 'track-1',
       timeRange: TimeRange.SHORT_TERM,
     })
-
-    console.log(result.track)
 
     // 3. Asserções
     expect(result.track.name).toBe('Starboy')

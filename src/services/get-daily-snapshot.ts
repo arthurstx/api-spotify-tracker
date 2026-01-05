@@ -18,14 +18,14 @@ interface GetDailySnapshotUseCaseRequest {
 interface GetDailySnapshotUseCaseResponse {
   snapshotDate: Date
   formatedArtists: FormatedArtists
-  //  formatedTracks: FormatedTracks
+  //  formatedTracks: FormatedTracks TODO: add me
 }
 
 export class GetDailySnapshotUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private artistRankingRead: ArtistRankingsReadRepository,
-    private snapShotRepository: SnapShotsRepository,
+    private snapShotRepository: SnapShotsRepository
   ) {}
 
   async execute({
@@ -41,7 +41,7 @@ export class GetDailySnapshotUseCase {
 
     const snapShot = await this.snapShotRepository.findByUserAndDate(
       userId,
-      snapshotDate,
+      snapshotDate
     )
 
     if (!snapShot) {
@@ -51,7 +51,7 @@ export class GetDailySnapshotUseCase {
     const formatedArtists =
       await this.artistRankingRead.fetchDailyArtistsWithRankings(
         snapShot.id,
-        timeRange,
+        timeRange
       )
 
     return {

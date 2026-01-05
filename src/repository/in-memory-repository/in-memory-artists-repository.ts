@@ -4,6 +4,15 @@ import { ArtistCreateInput } from '../../../generated/prisma/models'
 import { ArtistsRepository } from '../artists-repository'
 
 export class InMemoryArtistsRepository implements ArtistsRepository {
+  async findById(id: string) {
+    const artist = this.items.find((a) => a.id === id)
+
+    if (!artist) {
+      return null
+    }
+
+    return artist
+  }
   public items: Artist[] = []
   async upsertMany(data: ArtistCreateInput[]) {
     return data.map((input) => {
@@ -11,7 +20,7 @@ export class InMemoryArtistsRepository implements ArtistsRepository {
 
       if (!existingArtist) {
         const newArtist: Artist = {
-          id: randomUUID(),
+          id: input.id ?? randomUUID(),
           createdAt: new Date(),
           imageUrl: input.imageUrl ?? null,
           name: input.name,

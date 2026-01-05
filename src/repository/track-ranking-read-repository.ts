@@ -1,7 +1,7 @@
 import { TimeRange } from '../../generated/prisma/enums'
 
 interface history {
-  date: string
+  date: Date
   position: number
   timeRange: TimeRange
 }

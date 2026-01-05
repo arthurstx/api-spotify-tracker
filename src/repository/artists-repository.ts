@@ -1,6 +1,6 @@
 import { Artist, Prisma } from '../../generated/prisma/browser'
 
 export interface ArtistsRepository {
-  findUniqueArtistById(id: string): Promise<Artist[]>
+  findById(id: string): Promise<Artist | null>
   upsertMany(data: Prisma.ArtistCreateInput[]): Promise<Artist[]>
 }
