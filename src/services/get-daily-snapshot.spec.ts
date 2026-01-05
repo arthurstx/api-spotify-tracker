@@ -6,11 +6,18 @@ import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/
 import { UserNotFoundError } from './errors/user-not-found-error'
 import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { randomUUID } from 'crypto'
-import { Artist, TimeRange } from '../../generated/prisma/browser'
+import {
+  Artist,
+  TimeRange,
+  Track,
+  TrackArtist,
+} from '../../generated/prisma/browser'
+import { InMemoryTrackRankingReadRepository } from '../repository/in-memory-repository/in-memory-track-ranking-read-repository'
 
 describe('Get Daily Snapshot Use Case', () => {
   let userRepository: InMemoryUserRepository
   let artistRankingsReadRepository: InMemoryArtistRankingsReadRepository
+  let trackRankingReadRepository: InMemoryTrackRankingReadRepository
   let snapShotRepository: InMemorySnapShotsRepository
   let sut: GetDailySnapshotUseCase
 
@@ -21,10 +28,12 @@ describe('Get Daily Snapshot Use Case', () => {
       [],
       []
     )
+    trackRankingReadRepository = new InMemoryTrackRankingReadRepository()
     snapShotRepository = new InMemorySnapShotsRepository()
     sut = new GetDailySnapshotUseCase(
       userRepository,
       artistRankingsReadRepository,
+      trackRankingReadRepository,
       snapShotRepository
     )
   })
@@ -58,7 +67,7 @@ describe('Get Daily Snapshot Use Case', () => {
     ).rejects.toBeInstanceOf(SnapshotNotFoundError)
   })
 
-  it('should be able to get a daily snapshot', async () => {
+  it('should be able to get a daily snapshot with artists and tracks', async () => {
     const user = await userRepository.create({
       id: 'user-id',
       spotifyId: 'user-id',
@@ -81,7 +90,6 @@ describe('Get Daily Snapshot Use Case', () => {
       imageUrl: 'http://example.com/image.jpg',
       createdAt: new Date(),
     } as Artist
-
     artistRankingsReadRepository.artists.push(artist)
     artistRankingsReadRepository.artistRankings.push({
       id: randomUUID(),
@@ -90,6 +98,29 @@ describe('Get Daily Snapshot Use Case', () => {
       position: 1,
       timeRange: TimeRange.MEDIUM_TERM,
     })
+
+    const track = {
+      id: 'track-id',
+      name: 'Track Name',
+      imageUrl: 'http://example.com/track.jpg',
+      durationMs: 180000,
+      createdAt: new Date(),
+    } as Track
+    trackRankingReadRepository.tracks.push(track)
+    trackRankingReadRepository.rankings.push({
+      id: randomUUID(),
+      snapshotId: snapshot.id,
+      trackId: track.id,
+      position: 1,
+      timeRange: TimeRange.MEDIUM_TERM,
+    })
+    trackRankingReadRepository.artists.push(artist)
+
+    const trackArtist: TrackArtist = {
+      trackId: track.id,
+      artistId: artist.id,
+    }
+    trackRankingReadRepository.tracksArtist.push(trackArtist)
 
     const result = await sut.execute({
       userId: user.id,
@@ -105,5 +136,42 @@ describe('Get Daily Snapshot Use Case', () => {
       imageUrl: 'http://example.com/image.jpg',
       position: 1,
     })
+
+    expect(result.formatedTracks.track).toHaveLength(1)
+    expect(result.formatedTracks.track[0]).toEqual({
+      id: 'track-id',
+      name: 'Track Name',
+      imageUrl: 'http://example.com/track.jpg',
+      position: 1,
+      artistName: 'Artist Name',
+    })
+  })
+
+  it('should return empty arrays when no artists or tracks are ranked for the snapshot', async () => {
+    const user = await userRepository.create({
+      id: 'user-id',
+      spotifyId: 'user-id',
+      displayName: 'Test User',
+      accessToken: 'test-token',
+      refreshToken: 'test-refresh-token',
+      tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
+    })
+
+    const snapshotDate = new Date()
+    await snapShotRepository.create({
+      id: 'snapshot-id',
+      userId: user.id,
+      date: snapshotDate,
+    })
+
+    const result = await sut.execute({
+      userId: user.id,
+      snapshotDate,
+      timeRange: TimeRange.LONG_TERM,
+    })
+
+    expect(result.snapshotDate).toEqual(snapshotDate)
+    expect(result.formatedArtists.artist).toHaveLength(0)
+    expect(result.formatedTracks.track).toHaveLength(0)
   })
 })

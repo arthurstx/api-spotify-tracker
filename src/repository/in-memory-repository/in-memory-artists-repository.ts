@@ -13,6 +13,11 @@ export class InMemoryArtistsRepository implements ArtistsRepository {
 
     return artist
   }
+
+  async findManyByIds(ids: string[]) {
+    return this.items.filter((a) => ids.includes(a.id))
+  }
+
   public items: Artist[] = []
   async upsertMany(data: ArtistCreateInput[]) {
     return data.map((input) => {

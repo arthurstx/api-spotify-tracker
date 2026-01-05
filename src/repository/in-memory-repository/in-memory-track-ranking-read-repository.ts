@@ -1,4 +1,5 @@
 import {
+  Artist,
   Snapshot,
   TimeRange,
   Track,
@@ -17,25 +18,40 @@ export class InMemoryTrackRankingReadRepository
   public tracks: Track[] = []
   public rankings: TrackRanking[] = []
   public snapshots: Snapshot[] = []
-  /*
-    track: Array<{
-    id: string
-    name: string
-    imageUrl?: string | null
-    position: number
-    artistName: string
-  }>
-*/
+  public artists: Artist[] = []
+
   async fetchDailyArtistsWithRankings(
     snapshotId: string,
     timeRange: TimeRange
-  ) {
-    const TrackRanking = this.rankings
-      .filter((r) => r.snapshotId === snapshotId && timeRange === r.timeRange)
-      .map((tr) => {
-        const tracks = this.tracks.filter((t) => t.id === tr.trackId)
-        return tracks
+  ): Promise<FormatedTracks> {
+    const trackRankings = this.rankings.filter(
+      (r) => r.snapshotId === snapshotId && r.timeRange === timeRange
+    )
+
+    const track = trackRankings
+      .map((ranking) => {
+        const track = this.tracks.find((t) => t.id === ranking.trackId)
+        if (!track) return null
+
+        const trackArtists = this.tracksArtist
+          .filter((ta) => ta.trackId === track.id)
+          .map((ta) => {
+            const artist = this.artists.find((a) => a.id === ta.artistId)
+            return artist?.name ?? 'Unknown Artist'
+          })
+          .join(', ')
+
+        return {
+          id: track.id,
+          name: track.name,
+          imageUrl: track.imageUrl,
+          position: ranking.position,
+          artistName: trackArtists,
+        }
       })
+      .filter((t): t is NonNullable<typeof t> => t !== null)
+
+    return { track }
   }
 
   async fetchHistory(userId: string, trackId: string, timeRange?: TimeRange) {
