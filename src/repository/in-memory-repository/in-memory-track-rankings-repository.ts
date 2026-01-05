@@ -9,6 +9,8 @@ import {
 export class InMemoryTrackRankingsRepository
   implements TrackRankingsRepository
 {
+  public items: TrackRanking[] = []
+
   async fetchManyTrackRankings(
     props: TrackRankingsProps
   ): Promise<TrackRanking[] | []> {
@@ -21,7 +23,6 @@ export class InMemoryTrackRankingsRepository
     return trackRankings
   }
 
-  public items: TrackRanking[] = []
   async createMany(
     data: TrackRankingUncheckedCreateInput[]
   ): Promise<TrackRanking[]> {

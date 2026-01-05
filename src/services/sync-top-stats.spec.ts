@@ -13,7 +13,7 @@ import { InMemoryTrackRankingsRepository } from '../repository/in-memory-reposit
 import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snap-shots-repository'
 import { InMemoryArtistRankingRepository } from '../repository/in-memory-repository/in-memory-artist-rankings-repository'
 import { SyncTopStatsUseCase } from './sync-top-stats'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 
 let userRepository: UsersRepository
@@ -94,7 +94,7 @@ describe('sync top stats use case', () => {
       displayName: 'jhon doe',
       tokenExpiresAt: new Date(),
     })
-    await snapShotsRepository.create(userId, new Date())
+    await snapShotsRepository.create({ userId, date: new Date() })
 
     await expect(sut.execute({ userId })).rejects.toBeInstanceOf(
       SyncAlreadyDoneError

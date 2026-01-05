@@ -5,10 +5,11 @@ import {
   ArtistRankingsProps,
   ArtistRankingsRepository,
 } from '../artist-rankings-repository'
-
 export class InMemoryArtistRankingRepository
   implements ArtistRankingsRepository
 {
+  public items: ArtistRanking[] = []
+
   async fetchManyArtistRankings(props: ArtistRankingsProps) {
     const ArtistRanking = this.items.filter(
       (item) =>
@@ -19,7 +20,6 @@ export class InMemoryArtistRankingRepository
 
     return ArtistRanking
   }
-  public items: ArtistRanking[] = []
   async createMany(
     data: ArtistRankingUncheckedCreateInput[]
   ): Promise<ArtistRanking[]> {

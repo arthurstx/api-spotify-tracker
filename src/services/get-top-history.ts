@@ -5,7 +5,7 @@ import { ArtistRankingsRepository } from '../repository/artist-rankings-reposito
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { TrackRankingsRepository } from '../repository/track-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetTopHistoryUseCaseRequest {
   userId: string

@@ -1,4 +1,5 @@
 import { Snapshot } from '../../generated/prisma/browser'
+import { SnapshotCreateManyInput } from '../../generated/prisma/models'
 
 export interface SnapShotsRepository {
   fetchManyByUserIdAndPeriod(
@@ -7,5 +8,5 @@ export interface SnapShotsRepository {
     endDate: Date
   ): Promise<Snapshot[]>
   findByUserAndDate(userId: string, date: Date): Promise<Snapshot | null>
-  create(userId: string, date: Date): Promise<Snapshot>
+  create(data: SnapshotCreateManyInput): Promise<Snapshot>
 }

@@ -23,7 +23,7 @@ export class InMemorySnapShotsRepository implements SnapShotsRepository {
     const endOfTheDay = dayjs(date).endOf('date')
 
     const snapShotOnSameDate = this.items.find((item) => {
-      const snapShotDate = dayjs(item.createdAt)
+      const snapShotDate = dayjs(item.date)
       const isOnSameDate =
         snapShotDate.isAfter(startOfTheDay) &&
         snapShotDate.isBefore(endOfTheDay)
@@ -36,12 +36,12 @@ export class InMemorySnapShotsRepository implements SnapShotsRepository {
     }
     return snapShotOnSameDate
   }
-  async create(userId: string, date: Date) {
+  async create(data: { userId: string; date: Date; id?: string }) {
     const snapShots = {
-      id: randomUUID() ?? null,
+      id: data.id ?? randomUUID(),
       createdAt: new Date(),
-      date: date,
-      userId: userId,
+      date: data.date,
+      userId: data.userId,
     } as Snapshot
 
     this.items.push(snapShots)

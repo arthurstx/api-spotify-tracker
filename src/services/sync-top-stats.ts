@@ -11,7 +11,7 @@ import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { Artist, TimeRange, Track } from '../../generated/prisma/browser'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 
 interface SyncTopStatsUseCaseRequest {

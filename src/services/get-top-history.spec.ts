@@ -10,7 +10,7 @@ import { InMemoryArtistRankingRepository } from '../repository/in-memory-reposit
 import { GetTopHistoryUseCase } from './get-top-history'
 import { TimeRange } from '../../generated/prisma/browser'
 import dayjs from 'dayjs'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 
 let userRepository: UsersRepository
 let artistRankingsRepository: ArtistRankingsRepository
@@ -45,7 +45,7 @@ describe('Authenticate use case', () => {
 
     const date = dayjs(new Date()).subtract(10, 'days').toDate()
 
-    const snapShot = await snapShotsRepository.create(user.id, date)
+    const snapShot = await snapShotsRepository.create({ userId: user.id, date })
 
     const artistRankings = [
       {
@@ -81,7 +81,7 @@ describe('Authenticate use case', () => {
 
     const date = dayjs(new Date()).subtract(10, 'days').toDate()
 
-    const snapShot = await snapShotsRepository.create(user.id, date)
+    const snapShot = await snapShotsRepository.create({ userId: user.id, date })
 
     const trackRankings = [
       {
@@ -117,7 +117,7 @@ describe('Authenticate use case', () => {
 
     const date = dayjs(new Date()).subtract(10, 'days').toDate()
 
-    const snapShot = await snapShotsRepository.create(user.id, date)
+    const snapShot = await snapShotsRepository.create({ userId: user.id, date })
 
     const trackRankings = [
       {
@@ -154,7 +154,7 @@ describe('Authenticate use case', () => {
 
     const date = dayjs(new Date()).subtract(10, 'days').toDate()
 
-    const snapShot = await snapShotsRepository.create(user.id, date)
+    const snapShot = await snapShotsRepository.create({ userId: user.id, date })
 
     const trackRankings = [
       {
@@ -181,7 +181,10 @@ describe('Authenticate use case', () => {
   it('should not be able get artist rankings history without user', async () => {
     const date = dayjs(new Date()).subtract(10, 'days').toDate()
 
-    const snapShot = await snapShotsRepository.create('user not found', date)
+    const snapShot = await snapShotsRepository.create({
+      userId: 'user not found',
+      date,
+    })
 
     const artistRankings = [
       {

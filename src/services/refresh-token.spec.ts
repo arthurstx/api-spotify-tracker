@@ -3,7 +3,7 @@ import { SpotifyProviderMock } from '../provider/mock/SpotifyProviderMock'
 import { UsersRepository } from '../repository/user-repository'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 import { RefreshTokenExpiredError } from './errors/refresh-token-expired-error'
 
 let userRepository: UsersRepository

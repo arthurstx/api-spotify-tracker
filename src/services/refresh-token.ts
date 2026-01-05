@@ -2,7 +2,7 @@ import { User } from '../../generated/prisma/browser'
 import { SpotifyProvider } from '../provider/spotify-provider-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenExpiredError } from './errors/refresh-token-expired-error'
-import { UserNotFoundError } from './errors/user- not-found-erro'
+import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface RefreshTokenUseCaseRequest {
   userId: string
