@@ -16,6 +16,32 @@ export class InMemoryTrackReadRepository implements TrackReadRepository {
     public trackArtists: TrackArtist[] = []
   ) {}
 
+  async findByTrackId(trackId: string) {
+    const track = this.tracks.find((tr) => tr.id === trackId)
+
+    if (!track) {
+      return null
+    }
+
+    const trackArtists = this.trackArtists.filter(
+      (ta) => ta.trackId === track.id
+    )
+    const artistsName = trackArtists
+      .map((ta) => {
+        const artist = this.artists.find((a) => a.id === ta.artistId)
+        return artist?.name
+      })
+      .filter(Boolean)
+      .join(', ')
+
+    return {
+      id: track.id,
+      name: track.name,
+      imageUrl: track.imageUrl,
+      artistsName: artistsName ?? '',
+    }
+  }
+
   async listTrackedByUser(userId: string) {
     const userSnapshots = this.snapshots.filter((s) => s.userId === userId)
     const snapshotIds = userSnapshots.map((s) => s.id)

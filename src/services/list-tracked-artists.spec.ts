@@ -37,8 +37,6 @@ describe('List Tracked Artists Use Case', () => {
       refreshToken: 'refresh',
       tokenExpiresAt: new Date(),
     })
-
-    // 2. Criar dados relacionados no repositório In-Memory
     const snapshotId = randomUUID()
     const artistId = 'artist-01'
 
@@ -51,7 +49,6 @@ describe('List Tracked Artists Use Case', () => {
       createdAt: new Date(),
     }
 
-    // Populando o repositório manualment (conforme a estrutura do seu In-Memory)
     artistReadRepository.artists.push(artist)
     artistReadRepository.snapshots.push({
       id: snapshotId,

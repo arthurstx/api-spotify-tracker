@@ -110,7 +110,10 @@ export class SyncTopStatsUseCase {
     const NormalizeArtist = topArtistsResponse.map(mapExternalArtistToArtist)
     const NormalizeTrack = topTracksResponse.map(mapExternalTrackToTrack)
 
-    const snapShot = await this.snapShotRepository.create(userId, new Date())
+    const snapShot = await this.snapShotRepository.create({
+      userId,
+      date: new Date(),
+    })
 
     const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
     const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)

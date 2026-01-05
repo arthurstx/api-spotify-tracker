@@ -19,10 +19,6 @@ enum TimeRange {
   LONG_TERM
 }
 
-// ======================================
-// MODELS
-// ======================================
-
 model User {
   id          String  @id @default(uuid())
   spotifyId   String  @unique

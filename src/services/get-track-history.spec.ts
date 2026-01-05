@@ -53,10 +53,8 @@ describe('Get Track History Use Case', () => {
     })
 
     trackReadRepository.trackArtists.push({
-      id: 'track-artist-1',
       artistId: 'artist-01',
       trackId: 'track-1',
-      createdAt: new Date(),
     })
 
     const snapshotId = 'snap-1'
