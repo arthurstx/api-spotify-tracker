@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/list-tracked-artists.ts</title>
+    <title>Code coverage report for src/services/get-latest-top-tracks.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/services</a> list-tracked-artists.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/services</a> get-latest-top-tracks.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -108,7 +108,25 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,6 +146,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,63 +159,73 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ArtistReadRepository } from '../repository/artist-read-repository'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { TimeRange } from '../../generated/prisma/enums'
+import { SnapShotsRepository } from '../repository/snapshots-repository'
+import { TrackRankingReadRepository } from '../repository/track-ranking-read-repository'
 import { UsersRepository } from '../repository/user-repository'
+import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 &nbsp;
-interface ListTrackedArtistsUseCaseRequest {
+interface GetLatestTopTracksUseCaseRequest {
   userId: string
+  timeRange: TimeRange
 }
 &nbsp;
-interface ListTrackedArtistsUseCaseResponse {
-  artists: Array&lt;{
+interface GetLatestTopTracksUseCaseResponse {
+  snapshotDate: Date
+&nbsp;
+  track: Array&lt;{
     id: string
     name: string
-    imageUrl: string | null
+    imageUrl?: string | null
+    position: number
+    artistName: string
   }&gt;
 }
 &nbsp;
-export class ListTrackedArtistsUseCase {
+export class GetLatestTopTracksUseCase {
   constructor(
-    private artistReadRepository: ArtistReadRepository,
-    private userRepository: UsersRepository
+    private snapshotRepository: SnapShotsRepository,
+    private userRepository: UsersRepository,
+    private trackRankingRead: TrackRankingReadRepository
   ) {}
 &nbsp;
   async execute({
     userId,
-  }: ListTrackedArtistsUseCaseRequest): Promise&lt;ListTrackedArtistsUseCaseResponse&gt; {
+    timeRange,
+  }: GetLatestTopTracksUseCaseRequest): Promise&lt;GetLatestTopTracksUseCaseResponse&gt; {
     const user = await this.userRepository.findByUserId(userId)
 &nbsp;
     if (!user) {
       throw new UserNotFoundError()
     }
 &nbsp;
-    const artistsWhitoutFormated =
-      await this.artistReadRepository.listTrackedByUser(userId)
+    const snapshot = await this.snapshotRepository.findLatest(userId)
 &nbsp;
-    const artists = artistsWhitoutFormated.map((artist) =&gt; {
-      return {
-        id: artist.id,
-        name: artist.name,
-        imageUrl: artist.imageUrl ?? <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
-      }
-    })
+    if (!snapshot) {
+      throw new SnapshotNotFoundError()
+    }
 &nbsp;
-    return { artists }
+    const { track } = await this.trackRankingRead.fetchDailyArtistsWithRankings(
+      snapshot.id,
+      timeRange
+    )
+&nbsp;
+    return { snapshotDate: snapshot.createdAt, track }
   }
 }
 &nbsp;</pre></td></tr></table></pre>

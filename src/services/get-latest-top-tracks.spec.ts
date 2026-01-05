@@ -2,31 +2,32 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { UsersRepository } from '../repository/user-repository'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { TimeRange } from '../../generated/prisma/enums'
-import { InMemoryArtistRankingsReadRepository } from '../repository/in-memory-repository/in-memory-artist-rankings-read-repository'
 import { UserNotFoundError } from './errors/user-not-found-error'
-import { GetLatestTopArtistsseCase } from './get-latest-top-artists'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snapshots-repository'
-import { Artist } from '../../generated/prisma/browser'
+import { GetLatestTopTracksUseCase } from './get-latest-top-tracks'
+import { InMemoryTrackRankingReadRepository } from '../repository/in-memory-repository/in-memory-track-ranking-read-repository'
+import { Track } from '../../generated/prisma/browser'
+import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 
 let usersRepository: UsersRepository
-let artistRankingsRead: InMemoryArtistRankingsReadRepository
+let trackRankingsRead: InMemoryTrackRankingReadRepository
 let snapshotRepository: SnapShotsRepository
-let sut: GetLatestTopArtistsseCase
+let sut: GetLatestTopTracksUseCase
 
-describe('Get latest top artist Use Case', () => {
+describe('Get latest top tracks Use Case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUserRepository()
     snapshotRepository = new InMemorySnapShotsRepository()
-    artistRankingsRead = new InMemoryArtistRankingsReadRepository([], [], [])
-    sut = new GetLatestTopArtistsseCase(
+    trackRankingsRead = new InMemoryTrackRankingReadRepository()
+    sut = new GetLatestTopTracksUseCase(
       snapshotRepository,
       usersRepository,
-      artistRankingsRead
+      trackRankingsRead
     )
   })
 
-  it('should be able to get latest artist ranking', async () => {
+  it('should be able to get latest track ranking', async () => {
     await usersRepository.create({
       id: 'user-01',
       spotifyId: 'spotify_id',
@@ -37,27 +38,28 @@ describe('Get latest top artist Use Case', () => {
       tokenExpiresAt: new Date(),
     })
 
-    const artist: Artist = {
-      id: 'artist-01',
-      name: 'jhon doe',
+    const track: Track = {
+      id: 'track-01',
+      name: 'track name',
       spotifyId: 'spotify_id',
+      durationMs: 300,
       imageUrl: 'http://img.com',
       createdAt: new Date(),
     }
 
-    artistRankingsRead.artists.push(artist)
+    trackRankingsRead.tracks.push(track)
 
     const snapshot = await snapshotRepository.create({
+      date: new Date(),
       id: 'snap-1',
       userId: 'user-01',
-      date: new Date(),
     })
 
-    artistRankingsRead.snapshot.push(snapshot)
+    trackRankingsRead.snapshots.push(snapshot)
 
-    artistRankingsRead.artistRankings.push({
+    trackRankingsRead.rankings.push({
       id: 'rank-1',
-      artistId: 'artist-01',
+      trackId: 'track-01',
       snapshotId: snapshot.id,
       position: 1,
       timeRange: TimeRange.SHORT_TERM,
@@ -68,9 +70,8 @@ describe('Get latest top artist Use Case', () => {
       timeRange: TimeRange.SHORT_TERM,
     })
 
-    // 3. Asserções
-    expect(result.artist[0].name).toBe('jhon doe')
-    expect(result.artist[0].id).toBe('artist-01')
+    expect(result.track[0].name).toBe('track name')
+    expect(result.track[0].id).toBe('track-01')
     expect(result.snapshotDate).toBe(snapshot.createdAt)
   })
 
@@ -81,5 +82,24 @@ describe('Get latest top artist Use Case', () => {
         timeRange: TimeRange.LONG_TERM,
       })
     ).rejects.toBeInstanceOf(UserNotFoundError)
+  })
+
+  it('should throw error if snapshot does not exist', async () => {
+    await usersRepository.create({
+      id: 'user-01',
+      spotifyId: 'spotify_id',
+      email: 'jhondoe@email.com',
+      accessToken: 'old_token',
+      refreshToken: 'refresh_token',
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
+    })
+
+    await expect(
+      sut.execute({
+        userId: 'user-01',
+        timeRange: TimeRange.LONG_TERM,
+      })
+    ).rejects.toBeInstanceOf(SnapshotNotFoundError)
   })
 })

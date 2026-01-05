@@ -69,8 +69,6 @@ describe('Get Artist History Use Case', () => {
       timeRange: TimeRange.SHORT_TERM,
     })
 
-    console.log(result.history)
-
     // 3. Asserções
     expect(result.artist.name).toBe('jhon doe')
     expect(result.artist.id).toBe('artist-01')
