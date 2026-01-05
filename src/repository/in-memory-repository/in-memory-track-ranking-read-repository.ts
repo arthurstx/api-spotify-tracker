@@ -1,15 +1,42 @@
 import {
   Snapshot,
   TimeRange,
+  Track,
+  TrackArtist,
   TrackRanking,
 } from '../../../generated/prisma/browser'
-import { TrackRankingReadRepository } from '../track-ranking-read-repository'
+import {
+  FormatedTracks,
+  TrackRankingReadRepository,
+} from '../track-ranking-read-repository'
 
 export class InMemoryTrackRankingReadRepository
   implements TrackRankingReadRepository
 {
+  public tracksArtist: TrackArtist[] = []
+  public tracks: Track[] = []
   public rankings: TrackRanking[] = []
   public snapshots: Snapshot[] = []
+  /*
+    track: Array<{
+    id: string
+    name: string
+    imageUrl?: string | null
+    position: number
+    artistName: string
+  }>
+*/
+  async fetchDailyArtistsWithRankings(
+    snapshotId: string,
+    timeRange: TimeRange
+  ) {
+    const TrackRanking = this.rankings
+      .filter((r) => r.snapshotId === snapshotId && timeRange === r.timeRange)
+      .map((tr) => {
+        const tracks = this.tracks.filter((t) => t.id === tr.trackId)
+        return tracks
+      })
+  }
 
   async fetchHistory(userId: string, trackId: string, timeRange?: TimeRange) {
     const userSnapshotIds = this.snapshots

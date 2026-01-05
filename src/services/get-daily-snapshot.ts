@@ -5,6 +5,10 @@ import {
 } from '../repository/artist-rankings-read-repository'
 
 import { SnapShotsRepository } from '../repository/snapshots-repository'
+import {
+  FormatedTracks,
+  TrackRankingReadRepository,
+} from '../repository/track-ranking-read-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
@@ -18,13 +22,14 @@ interface GetDailySnapshotUseCaseRequest {
 interface GetDailySnapshotUseCaseResponse {
   snapshotDate: Date
   formatedArtists: FormatedArtists
-  //  formatedTracks: FormatedTracks TODO: add me
+  formatedTracks: FormatedTracks
 }
 
 export class GetDailySnapshotUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private artistRankingRead: ArtistRankingsReadRepository,
+    private trackRankingRead: TrackRankingReadRepository,
     private snapShotRepository: SnapShotsRepository
   ) {}
 
@@ -54,9 +59,16 @@ export class GetDailySnapshotUseCase {
         timeRange
       )
 
+    const formatedTracks =
+      await this.trackRankingRead.fetchDailyArtistsWithRankings(
+        snapShot.id,
+        timeRange
+      )
+
     return {
       snapshotDate,
       formatedArtists,
+      formatedTracks,
     }
   }
 }

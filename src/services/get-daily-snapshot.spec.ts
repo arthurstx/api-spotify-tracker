@@ -18,6 +18,7 @@ describe('Get Daily Snapshot Use Case', () => {
     userRepository = new InMemoryUserRepository()
     artistRankingsReadRepository = new InMemoryArtistRankingsReadRepository(
       [],
+      [],
       []
     )
     snapShotRepository = new InMemorySnapShotsRepository()

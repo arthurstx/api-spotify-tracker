@@ -2,6 +2,7 @@ import { Snapshot } from '../../generated/prisma/browser'
 import { SnapshotCreateManyInput } from '../../generated/prisma/models'
 
 export interface SnapShotsRepository {
+  findLatest(userId: string): Promise<Snapshot | null>
   fetchManySnapshotDatesByUserId(userId: string): Promise<Date[]>
   fetchManyByUserIdAndPeriod(
     userId: string,
