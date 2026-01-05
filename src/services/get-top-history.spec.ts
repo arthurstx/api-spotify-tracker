@@ -5,7 +5,7 @@ import type { TrackRankingsRepository } from '../repository/track-rankings-repos
 import type { SnapShotsRepository } from '../repository/snapshots-repository'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { InMemoryTrackRankingsRepository } from '../repository/in-memory-repository/in-memory-track-rankings-repository'
-import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snap-shots-repository'
+import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snapshots-repository'
 import { InMemoryArtistRankingRepository } from '../repository/in-memory-repository/in-memory-artist-rankings-repository'
 import { GetTopHistoryUseCase } from './get-top-history'
 import { TimeRange } from '../../generated/prisma/browser'
