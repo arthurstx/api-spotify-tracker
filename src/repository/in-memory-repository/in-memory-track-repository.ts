@@ -5,6 +5,12 @@ import { TracksRepository } from '../tracks-repository'
 
 export class InMemoryTracksRepository implements TracksRepository {
   public items: Track[] = []
+  // TODO: fix me
+  fetchManyByUserId(_userId: string): Promise<Track[]> {
+    const tracks = this.items
+
+    return tracks // ignore userId
+  }
   async upsertMany(data: TrackCreateInput[]) {
     return data.map((input) => {
       const existingTrack = this.items.find((item) => item.id === input.id)

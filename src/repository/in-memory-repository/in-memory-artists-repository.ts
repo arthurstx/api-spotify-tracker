@@ -4,6 +4,14 @@ import { ArtistCreateInput } from '../../../generated/prisma/models'
 import { ArtistsRepository } from '../artists-repository'
 
 export class InMemoryArtistsRepository implements ArtistsRepository {
+  public items: Artist[] = []
+
+  // TODO: fix me
+  async fetchManyByUserId(_userId: string): Promise<Artist[]> {
+    const artists = this.items
+    return artists // ignore user Id
+  }
+
   async findById(id: string) {
     const artist = this.items.find((a) => a.id === id)
 
@@ -18,7 +26,6 @@ export class InMemoryArtistsRepository implements ArtistsRepository {
     return this.items.filter((a) => ids.includes(a.id))
   }
 
-  public items: Artist[] = []
   async upsertMany(data: ArtistCreateInput[]) {
     return data.map((input) => {
       const existingArtist = this.items.find((item) => item.id === input.id)

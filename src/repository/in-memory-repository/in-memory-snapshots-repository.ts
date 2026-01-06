@@ -6,6 +6,11 @@ import { randomUUID } from 'node:crypto'
 export class InMemorySnapShotsRepository implements SnapShotsRepository {
   public items: Snapshot[] = []
 
+  async fetchManyByUserId(userId: string) {
+    const snapshots = this.items.filter((s) => s.userId === userId)
+    return snapshots
+  }
+
   async findLatest(userId: string): Promise<Snapshot | null> {
     const snapShot = this.items.find((s) => s.userId === userId)
     if (!snapShot) {
