@@ -15,6 +15,7 @@ let tracksReadRepository: InMemoryTrackReadRepository
 let snapshotRepository: SnapShotsRepository
 let sut: GetUserStatsUseCase // System Under Test
 
+// TODO: fix me
 describe('Get User Stats Use Case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUserRepository()

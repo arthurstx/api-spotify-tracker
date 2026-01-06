@@ -11,6 +11,7 @@ let sut: ListTrackedTracksUseCase
 
 let user: User
 
+// TODO: fix me
 describe('List Tracked Tracks Use Case', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUserRepository()

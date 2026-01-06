@@ -5,8 +5,9 @@ import {
   TrackArtist,
   TrackRanking,
 } from '../../../generated/prisma/browser'
-import { TrackReadRepository } from '../track-read-repository'
+import { TrackReadRepository } from '../tracks-repository'
 
+// TODO: fix me
 export class InMemoryTrackReadRepository implements TrackReadRepository {
   constructor(
     public snapshots: Snapshot[] = [],

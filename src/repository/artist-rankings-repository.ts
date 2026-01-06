@@ -11,12 +11,10 @@ export interface ArtistRankingsProps {
 }
 
 export interface ArtistRankingsRepository {
-  fetchManyArtistRankings(
-    props: ArtistRankingsProps
-  ): Promise<ArtistRanking[] | []>
+  fetchManyArtistRankings(props: ArtistRankingsProps): Promise<ArtistRanking[]>
   createMany(
     data: Prisma.ArtistRankingUncheckedCreateInput[]
-  ): Promise<ArtistRanking[]>
+  ): Promise<ArtistRanking[] | void>
 }
 
 // with joins
