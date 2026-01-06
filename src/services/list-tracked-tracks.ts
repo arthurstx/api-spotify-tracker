@@ -1,4 +1,4 @@
-import { TrackReadRepository } from '../repository/track-read-repository'
+import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
@@ -11,7 +11,7 @@ interface ListTrackedTracksUseCaseResponse {
     id: string
     name: string
     imageUrl?: string | null
-    artistsName: string
+    artistsName: string[]
   }>
 }
 

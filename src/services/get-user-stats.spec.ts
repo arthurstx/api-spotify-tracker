@@ -5,28 +5,26 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { InMemorySnapShotsRepository } from '../repository/in-memory-repository/in-memory-snapshots-repository'
 import { GetUserStatsUseCase } from './get-user-stats'
-import { TracksRepository } from '../repository/tracks-repository'
-import { ArtistsRepository } from '../repository/artists-repository'
-import { InMemoryArtistsRepository } from '../repository/in-memory-repository/in-memory-artists-repository'
-import { InMemoryTracksRepository } from '../repository/in-memory-repository/in-memory-track-repository'
 import { afterEach } from 'node:test'
+import { InMemoryTrackReadRepository } from '../repository/in-memory-repository/in-memory-track-read-repository'
+import { InMemoryArtistReadRepository } from '../repository/in-memory-repository/in-memory-artist-read-repository'
 
 let usersRepository: UsersRepository
-let artistsRepository: ArtistsRepository
-let trackRepository: TracksRepository
+let artistsReadRepository: InMemoryArtistReadRepository
+let tracksReadRepository: InMemoryTrackReadRepository
 let snapshotRepository: SnapShotsRepository
 let sut: GetUserStatsUseCase // System Under Test
 
 describe('Get User Stats Use Case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUserRepository()
-    artistsRepository = new InMemoryArtistsRepository()
-    trackRepository = new InMemoryTracksRepository()
+    artistsReadRepository = new InMemoryArtistReadRepository()
+    tracksReadRepository = new InMemoryTrackReadRepository()
     snapshotRepository = new InMemorySnapShotsRepository()
     sut = new GetUserStatsUseCase(
       snapshotRepository,
-      artistsRepository,
-      trackRepository,
+      tracksReadRepository,
+      artistsReadRepository,
       usersRepository
     )
 

@@ -1,4 +1,4 @@
-import { ArtistReadRepository } from '../repository/artist-read-repository'
+import { ArtistReadRepository } from '../repository/artists-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { UserNotFoundError } from './errors/user-not-found-error'
 

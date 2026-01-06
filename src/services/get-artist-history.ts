@@ -1,5 +1,5 @@
 import { TimeRange } from '../../generated/prisma/enums'
-import { ArtistRankingsReadRepository } from '../repository/artist-rankings-read-repository'
+import { ArtistRankingsReadRepository } from '../repository/artist-rankings-repository'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { ArtistNotFoundError } from './errors/artist-not-found-error'

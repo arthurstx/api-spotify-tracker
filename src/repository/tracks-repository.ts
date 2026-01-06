@@ -10,7 +10,7 @@ interface FormatedTrack {
   id: string
   name: string
   imageUrl: string | null
-  artistsName: string
+  artistsName: string[]
 }
 
 export interface TrackReadRepository {

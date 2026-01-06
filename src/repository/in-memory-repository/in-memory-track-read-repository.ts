@@ -64,8 +64,8 @@ export class InMemoryTrackReadRepository implements TrackReadRepository {
       )
       const artistsName = trackArtists
         .map((ta) => {
-          const artist = this.artists.find((a) => a.id === ta.artistId)
-          return artist?.name
+          const artist = this.artists.filter((a) => a.id === ta.artistId)
+          return artist
         })
         .filter(Boolean)
         .join(', ')

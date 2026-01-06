@@ -2,13 +2,13 @@ import { TimeRange } from '../../generated/prisma/browser'
 import {
   ArtistRankingsReadRepository,
   FormatedArtists,
-} from '../repository/artist-rankings-read-repository'
+} from '../repository/artist-rankings-repository'
 
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import {
   FormatedTracks,
   TrackRankingReadRepository,
-} from '../repository/track-ranking-read-repository'
+} from '../repository/track-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'

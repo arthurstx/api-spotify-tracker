@@ -1,6 +1,6 @@
 import { TimeRange } from '../../generated/prisma/enums'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
-import { TrackRankingReadRepository } from '../repository/track-ranking-read-repository'
+import { TrackRankingReadRepository } from '../repository/track-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'

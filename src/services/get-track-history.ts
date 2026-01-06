@@ -1,6 +1,6 @@
 import { TimeRange } from '../../generated/prisma/enums'
-import { TrackRankingReadRepository } from '../repository/track-ranking-read-repository'
-import { TrackReadRepository } from '../repository/track-read-repository'
+import { TrackRankingReadRepository } from '../repository/track-rankings-repository'
+import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
@@ -15,11 +15,11 @@ interface GetTrackHistoryUseCaseResponse {
     id: string
     name: string
     imageUrl: string | null
-    artistsName: string
+    artistsName: string[]
   }
 
   history: Array<{
-    date: string
+    date: Date
     position: number
     timeRange: TimeRange
   }>
