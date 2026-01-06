@@ -5,7 +5,7 @@ import { UsersRepository } from '../user-repository'
 
 export class PrismaUserRepository implements UsersRepository {
   async findByUserId(id: string) {
-    const user = prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         id,
       },
@@ -13,7 +13,7 @@ export class PrismaUserRepository implements UsersRepository {
     return user
   }
   async findBySpotifyId(spotifyId: string) {
-    const user = prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         spotifyId,
       },
@@ -21,13 +21,13 @@ export class PrismaUserRepository implements UsersRepository {
     return user
   }
   async create(data: UserCreateInput) {
-    const user = prisma.user.create({
+    const user = await prisma.user.create({
       data,
     })
     return user
   }
   async update(data: User) {
-    const user = prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id: data.id,
       },
