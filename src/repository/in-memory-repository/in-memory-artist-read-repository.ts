@@ -3,7 +3,7 @@ import {
   ArtistRanking,
   Snapshot,
 } from '../../../generated/prisma/browser'
-import { ArtistReadRepository } from '../artist-read-repository'
+import { ArtistReadRepository } from '../artists-repository'
 
 export class InMemoryArtistReadRepository implements ArtistReadRepository {
   constructor(

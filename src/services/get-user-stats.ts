@@ -1,6 +1,6 @@
-import { ArtistsRepository } from '../repository/artists-repository'
+import { ArtistReadRepository } from '../repository/artists-repository'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
-import { TracksRepository } from '../repository/tracks-repository'
+import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
@@ -22,8 +22,8 @@ interface GetUserStatsUseCaseResponse {
 export class GetUserStatsUseCase {
   constructor(
     private snapshotRepository: SnapShotsRepository,
-    private artistsRepository: ArtistsRepository,
-    private tracksRepository: TracksRepository,
+    private tracksReadRepository: TrackReadRepository,
+    private artistsReadRepository: ArtistReadRepository,
     private userRepository: UsersRepository
   ) {}
 
@@ -38,9 +38,9 @@ export class GetUserStatsUseCase {
 
     const snapshots = await this.snapshotRepository.fetchManyByUserId(userId)
 
-    const artists = await this.artistsRepository.fetchManyByUserId(userId)
+    const artists = await this.artistsReadRepository.listTrackedByUser(userId)
 
-    const tracks = await this.tracksRepository.fetchManyByUserId(userId)
+    const tracks = await this.tracksReadRepository.listTrackedByUser(userId)
 
     const totalSnapshots = snapshots.length
 

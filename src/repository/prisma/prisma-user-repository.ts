@@ -5,7 +5,7 @@ import { UsersRepository } from '../user-repository'
 
 export class PrismaUserRepository implements UsersRepository {
   async findByUserId(id: string) {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         id,
       },
@@ -13,7 +13,7 @@ export class PrismaUserRepository implements UsersRepository {
     return user
   }
   async findBySpotifyId(spotifyId: string) {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         spotifyId,
       },
