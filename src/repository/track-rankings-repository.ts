@@ -7,12 +7,10 @@ export interface TrackRankingsProps {
 }
 
 export interface TrackRankingsRepository {
-  fetchManyTrackRankings(
-    props: TrackRankingsProps
-  ): Promise<TrackRanking[] | []>
+  fetchManyTrackRankings(props: TrackRankingsProps): Promise<TrackRanking[]>
   createMany(
     data: Prisma.TrackRankingUncheckedCreateInput[]
-  ): Promise<TrackRanking[]>
+  ): Promise<TrackRanking[] | void>
 }
 
 // with joins
@@ -28,7 +26,7 @@ export interface FormatedTracks {
     name: string
     imageUrl?: string | null
     position: number
-    artistName: string
+    artistName: string[]
   }>
 }
 
