@@ -5,7 +5,7 @@ import {
   SpotifyProviderRefreshTokenResponse,
   type SpotifyArtist,
   SpotifyTrack,
-} from '../spotify-provider-repository'
+} from '../spotify-provider-types'
 
 export class SpotifyProviderMock implements SpotifyProvider {
   async getTopTracks() {

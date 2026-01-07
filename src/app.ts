@@ -10,6 +10,8 @@ import {
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifyCors } from '@fastify/cors'
 import ScalarApiReference from '@scalar/fastify-api-reference'
+import { authRoutes } from './http/controllers/auth/routes.js'
+import { spotifyProviderRoutes } from './http/providers/spotify-provider/controllers/routes.js'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -36,6 +38,8 @@ app.register(ScalarApiReference, {
 })
 
 /**----- Routes -----*/
+app.register(spotifyProviderRoutes)
+app.register(authRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

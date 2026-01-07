@@ -1,5 +1,5 @@
 import { User } from '../../generated/prisma/browser'
-import { SpotifyProvider } from '../provider/spotify-provider-repository'
+import { SpotifyProvider } from '../provider/spotify-provider-types'
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenExpiredError } from './errors/refresh-token-expired-error'
 import { UserNotFoundError } from './errors/user-not-found-error'

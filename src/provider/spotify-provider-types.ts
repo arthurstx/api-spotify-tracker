@@ -4,11 +4,11 @@ export interface SpotifyProviderAuthenticationResponse {
   expires_in: number
 }
 
-export interface SpotifyProviderGetMeResponse {
-  displayName: string
-  imageUrl: string
-  spotifyId: string
+export interface SpotifyUserProfile {
+  id: string
+  display_name: string
   email: string
+  images: SpotifyImage[]
 }
 
 export interface SpotifyProviderRefreshTokenResponse {
@@ -77,12 +77,13 @@ export interface SpotifyTrack {
 }
 
 export interface SpotifyProvider {
-  getTopTracks(): Promise<SpotifyTrack[]>
+  getTopTracks(): Promise<object>
   getTopArtists(): Promise<SpotifyArtist[]>
   getTokensByCode(
-    code: string
+    code: string,
+    state?: string
   ): Promise<SpotifyProviderAuthenticationResponse | null>
-  getMe(acess_token: string): Promise<SpotifyProviderGetMeResponse | null>
+  getMe(acess_token: string): Promise<SpotifyUserProfile | null>
   refreshAcessToken(
     refreshToken: string
   ): Promise<SpotifyProviderRefreshTokenResponse | null>

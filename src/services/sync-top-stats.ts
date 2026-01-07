@@ -2,7 +2,7 @@ import {
   SpotifyArtist,
   SpotifyProvider,
   SpotifyTrack,
-} from '../provider/spotify-provider-repository'
+} from '../provider/spotify-provider-types'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { TracksRepository } from '../repository/tracks-repository'
 import { TrackRankingsRepository } from '../repository/track-rankings-repository'

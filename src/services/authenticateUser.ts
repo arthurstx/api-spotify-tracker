@@ -1,11 +1,12 @@
 import { User } from '../../generated/prisma/browser'
-import { SpotifyProvider } from '../provider/spotify-provider-repository'
+import { SpotifyProvider } from '../provider/spotify-provider-types'
 import { UsersRepository } from '../repository/user-repository'
 import { AuthenticationError } from './errors/authentication-Error'
 import { GetProfileError } from './errors/get-profile-error'
 
 interface AuthenticateUserUseCaseRequest {
   code: string
+  state: string
 }
 
 interface AuthenticateUserUseCaseResponse {
@@ -20,8 +21,12 @@ export class authenticateUserUseCase {
 
   async execute({
     code,
+    state,
   }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
-    const spotifyTokens = await this.spotifyProvider.getTokensByCode(code)
+    const spotifyTokens = await this.spotifyProvider.getTokensByCode(
+      code,
+      state
+    )
 
     if (!spotifyTokens) {
       throw new AuthenticationError()
@@ -29,13 +34,25 @@ export class authenticateUserUseCase {
 
     const { accessToken, expires_in, refreshToken } = spotifyTokens
 
-    const spotifyPorfile = await this.spotifyProvider.getMe(accessToken)
+    const unformattedSpotifyPorfile = await this.spotifyProvider.getMe(
+      accessToken
+    )
 
-    if (!spotifyPorfile) {
+    if (!unformattedSpotifyPorfile) {
       throw new GetProfileError()
     }
 
-    const { spotifyId, email, displayName, imageUrl } = spotifyPorfile
+    const spotifyPorfile = {
+      email: unformattedSpotifyPorfile.email,
+      spotifyId: unformattedSpotifyPorfile.id,
+      displayName: unformattedSpotifyPorfile.display_name,
+      imageUrl: unformattedSpotifyPorfile?.images?.[0]?.url ?? null,
+    }
+
+    const { displayName, email, imageUrl, spotifyId } = spotifyPorfile
+
+    console.log('----- image url -----')
+    console.log(imageUrl)
 
     const tokenExpiresAt = new Date(Date.now() + expires_in * 1000)
 
