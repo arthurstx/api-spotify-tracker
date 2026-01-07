@@ -12,9 +12,11 @@ export interface SpotifyUserProfile {
 }
 
 export interface SpotifyProviderRefreshTokenResponse {
-  accessToken: string
-  newRefreshToken: string | null
+  access_token: string
+  token_type: string
   expires_in: number
+  refresh_token: string
+  scope: string
 }
 
 export interface SpotifyArtist {

@@ -40,16 +40,16 @@ export class RefreshTokenUseCase {
       throw new RefreshTokenExpiredError()
     }
 
-    const { accessToken, expires_in, newRefreshToken } = spotifyTokens
+    const { expires_in, refresh_token, access_token } = spotifyTokens
 
     const tokenExpiresAt = new Date(Date.now() + expires_in * 1000)
 
-    user.accessToken = accessToken
+    user.accessToken = access_token
     user.tokenExpiresAt = tokenExpiresAt
-    user.refreshToken = newRefreshToken ? newRefreshToken : user.refreshToken
+    user.refreshToken = refresh_token ? refresh_token : user.refreshToken
 
     user = await this.userRepository.update(user)
 
-    return { accessToken, tokenExpiresAt }
+    return { accessToken: access_token, tokenExpiresAt }
   }
 }

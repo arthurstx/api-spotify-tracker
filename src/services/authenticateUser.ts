@@ -51,9 +51,6 @@ export class authenticateUserUseCase {
 
     const { displayName, email, imageUrl, spotifyId } = spotifyPorfile
 
-    console.log('----- image url -----')
-    console.log(imageUrl)
-
     const tokenExpiresAt = new Date(Date.now() + expires_in * 1000)
 
     const userExists = await this.userRepository.findBySpotifyId(spotifyId)

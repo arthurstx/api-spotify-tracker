@@ -3,7 +3,6 @@ import {
   SpotifyArtist,
   SpotifyProvider,
   SpotifyProviderAuthenticationResponse,
-  SpotifyProviderRefreshTokenResponse,
   SpotifyTrack,
 } from '../../../provider/spotify-provider-types'
 
@@ -67,9 +66,27 @@ export class SpotifyHttpProvider implements SpotifyProvider {
   getTopArtists(): Promise<SpotifyArtist[]> {
     throw new Error('Method not implemented.')
   }
-  refreshAcessToken(
-    refreshToken: string
-  ): Promise<SpotifyProviderRefreshTokenResponse | null> {
-    throw new Error('Method not implemented.')
+  async refreshAcessToken(refreshToken: string) {
+    const response = await axios.post(
+      'https://accounts.spotify.com/api/token',
+      new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: process.env.SPOTIFY_CLIENT_ID!,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization:
+            'Basic ' +
+            Buffer.from(
+              `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+            ).toString('base64'),
+        },
+      }
+    )
+    const data = response.data
+
+    return data
   }
 }
