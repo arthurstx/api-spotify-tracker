@@ -1,6 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
 import { makeAuthenticateUseCase } from '../../../services/factories/make-authenticate-use-case'
+import { AuthenticationError } from '../../../services/errors/authentication-Error'
+import { GetProfileError } from '../../../services/errors/get-profile-error'
+import { AxiosError } from 'axios'
 
 export async function authenticate(
   request: FastifyRequest,
@@ -19,6 +22,12 @@ export async function authenticate(
     const { user } = await authenticateUseCase.execute({ code, state })
     reply.status(201).send(user)
   } catch (err) {
-    console.error(err)
+    if (err instanceof AuthenticationError) {
+      return reply.status(404).send({ message: err })
+    } else if (err instanceof GetProfileError) {
+      return reply.status(403).send({ message: err })
+    } else if (err instanceof AxiosError) {
+      return reply.status(400).send({ message: err })
+    }
   }
 }

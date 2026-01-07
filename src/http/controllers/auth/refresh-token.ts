@@ -1,6 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
 import { makeRefreshTokenUseCase } from '../../../services/factories/make-refresh-token-use-case'
+import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
+import { RefreshTokenExpiredError } from '../../../services/errors/refresh-token-expired-error'
+import { AxiosError } from 'axios'
 
 export async function refreshToken(
   request: FastifyRequest,
@@ -20,6 +23,12 @@ export async function refreshToken(
     })
     reply.status(201).send({ accessToken, tokenExpiresAt })
   } catch (err) {
-    console.error(err)
+    if (err instanceof UserNotFoundError) {
+      return reply.status(403).send({ message: err })
+    } else if (err instanceof RefreshTokenExpiredError) {
+      return reply.status(402).send({ message: err })
+    } else if (err instanceof AxiosError) {
+      return reply.status(400).send({ message: err })
+    }
   }
 }
