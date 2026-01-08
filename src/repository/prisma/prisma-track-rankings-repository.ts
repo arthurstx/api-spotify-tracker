@@ -54,10 +54,8 @@ export class PrismaTrackRankingsRepository
             id: true,
             name: true,
             imageUrl: true,
-          },
-          include: {
             trackArtists: {
-              include: {
+              select: {
                 artist: {
                   select: {
                     name: true,
