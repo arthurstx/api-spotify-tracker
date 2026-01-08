@@ -72,6 +72,7 @@ export interface SpotifyTrack {
 
   name: string
   id: string
+  images: SpotifyImage[]
 
   duration_ms: number
 }

@@ -80,7 +80,7 @@ export class PrismaTracksRepository
     const operations = data.map((track) =>
       prisma.track.upsert({
         where: {
-          id: track.spotifyId,
+          spotifyId: track.spotifyId,
         },
         update: {
           name: track.name,

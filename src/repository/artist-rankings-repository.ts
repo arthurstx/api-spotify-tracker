@@ -3,6 +3,7 @@ import {
   Prisma,
   TimeRange,
 } from '../../generated/prisma/browser'
+import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
 
 export interface ArtistRankingsProps {
   artistId: string
@@ -14,7 +15,7 @@ export interface ArtistRankingsRepository {
   fetchManyArtistRankings(props: ArtistRankingsProps): Promise<ArtistRanking[]>
   createMany(
     data: Prisma.ArtistRankingUncheckedCreateInput[]
-  ): Promise<ArtistRanking[] | void>
+  ): Promise<ArtistRanking[] | BatchPayload>
 }
 
 // with joins

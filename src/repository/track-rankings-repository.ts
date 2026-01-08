@@ -1,4 +1,5 @@
 import { Prisma, TimeRange, TrackRanking } from '../../generated/prisma/browser'
+import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
 
 export interface TrackRankingsProps {
   trackId: string
@@ -10,7 +11,7 @@ export interface TrackRankingsRepository {
   fetchManyTrackRankings(props: TrackRankingsProps): Promise<TrackRanking[]>
   createMany(
     data: Prisma.TrackRankingUncheckedCreateInput[]
-  ): Promise<TrackRanking[] | void>
+  ): Promise<TrackRanking[] | BatchPayload>
 }
 
 // with joins

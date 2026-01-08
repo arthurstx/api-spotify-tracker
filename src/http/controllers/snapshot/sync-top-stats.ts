@@ -25,13 +25,15 @@ export async function syncTopStats(
     reply.status(201).send({ count })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
-      return reply.status(400).send({ message: err })
+      return reply.status(400).send({ message: err.message })
     } else if (err instanceof SyncAlreadyDoneError) {
-      return reply.status(403).send({ message: err })
+      return reply.status(403).send({ message: err.message })
     } else if (err instanceof RefreshTokenExpiredError) {
-      return reply.status(402).send({ message: err })
+      return reply.status(402).send({ message: err.message })
     } else if (err instanceof AxiosError) {
       return reply.status(400).send({ message: err })
+    } else {
+      throw err
     }
   }
 }

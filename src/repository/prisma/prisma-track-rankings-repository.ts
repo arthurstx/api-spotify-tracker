@@ -28,10 +28,12 @@ export class PrismaTrackRankingsRepository
 
     return trackRanking
   }
+
   async createMany(data: TrackRankingUncheckedCreateInput[]) {
-    prisma.trackRanking.createMany({
+    const count = prisma.trackRanking.createMany({
       data,
     })
+    return count
   }
 
   async fetchDailyArtistsWithRankings(

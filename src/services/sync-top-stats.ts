@@ -13,6 +13,8 @@ import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { Artist, TimeRange, Track } from '../../generated/prisma/browser'
 import { UserNotFoundError } from './errors/user-not-found-error'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
+import { TrackArtistsRepository } from '../repository/track-artists-repository'
+import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
 
 interface SyncTopStatsUseCaseRequest {
   userId: string
@@ -32,7 +34,7 @@ function mapExternalArtistToArtist(rawArtist: SpotifyArtist) {
 }
 
 function mapExternalTrackToTrack(rawTrack: SpotifyTrack) {
-  const image = rawTrack.artists[0].images?.[0]?.url ?? null
+  const image = rawTrack.images?.[0]?.url ?? null
   return {
     name: rawTrack.name,
     imageUrl: image,
@@ -70,6 +72,7 @@ function mapExternalTracksToTrackstRanking(
 export class SyncTopStatsUseCase {
   constructor(
     private usersRepository: UsersRepository,
+    private trackArtistsRepository: TrackArtistsRepository,
     private artistsRepository: ArtistsRepository,
     private artistRankingsRepository: ArtistRankingsRepository,
     private tracksRepository: TracksRepository,
@@ -100,7 +103,6 @@ export class SyncTopStatsUseCase {
       userId,
       new Date()
     )
-
     if (existingSnapshot) {
       throw new SyncAlreadyDoneError()
     }
@@ -119,7 +121,6 @@ export class SyncTopStatsUseCase {
       userId,
       date: new Date(),
     })
-    console.log(NormalizeArtist)
 
     const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
     const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)
@@ -132,10 +133,26 @@ export class SyncTopStatsUseCase {
       mapExternalTracksToTrackstRanking(item, index, snapShot.id)
     )
 
-    await this.artistRankingsRepository.createMany(artistRanking)
-    await this.trackRankingsRepository.createMany(tracksRanking)
+    const countArtist = (await this.artistRankingsRepository.createMany(
+      artistRanking
+    )) as BatchPayload
+    const countTracks = (await this.trackRankingsRepository.createMany(
+      tracksRanking
+    )) as BatchPayload
 
-    const count = artistRanking.length + tracksRanking.length
+    const trackAndArtistSpotifyIds = topTracksResponse.map((track) => {
+      return {
+        trackId: track.id,
+        artistId: track.artists.map((artist) => artist.id),
+      }
+    })
+
+    const countTA = await this.trackArtistsRepository.create(
+      trackAndArtistSpotifyIds
+    )
+    console.log(countTA)
+
+    const count = countArtist.count + countTracks.count
     return { count }
   }
 }

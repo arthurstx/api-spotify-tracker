@@ -90,8 +90,9 @@ export class PrismaArtistsRankingsRepository
   }
 
   async createMany(data: ArtistRankingUncheckedCreateInput[]) {
-    await prisma.artistRanking.createMany({
+    const count = await prisma.artistRanking.createMany({
       data,
     })
+    return count
   }
 }
