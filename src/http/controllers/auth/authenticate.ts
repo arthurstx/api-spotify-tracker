@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
-import { makeAuthenticateUseCase } from '../../../services/factories/make-authenticate-use-case'
 import { AuthenticationError } from '../../../services/errors/authentication-Error'
 import { GetProfileError } from '../../../services/errors/get-profile-error'
 import { AxiosError } from 'axios'
+import { makeAuthenticateUseCase } from '../../../services/factories/make-authenticate-use-case'
 
 export async function authenticate(
   request: FastifyRequest,

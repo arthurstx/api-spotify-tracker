@@ -13,7 +13,7 @@ interface AuthenticateUserUseCaseResponse {
   user: User
 }
 
-export class authenticateUserUseCase {
+export class AuthenticateUserUseCase {
   constructor(
     private userRepository: UsersRepository,
     private spotifyProvider: SpotifyProvider

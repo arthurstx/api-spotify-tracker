@@ -20,22 +20,17 @@ export interface SpotifyProviderRefreshTokenResponse {
 }
 
 export interface SpotifyArtist {
-  id: string
-  name: string
-  type: 'artist'
-  uri: string
-  image: [
-    {
-      url: string
-      height: number
-      width: number
-    }
-  ]
-
-  href: string
   external_urls: {
     spotify: string
   }
+  genres: string[]
+  href: string
+  id: string
+  images: SpotifyImage[]
+  name: string
+  popularity: number
+  type: 'artist'
+  uri: string
 }
 
 export interface SpotifyImage {
@@ -75,12 +70,15 @@ export interface SpotifyTrack {
 
   artists: SpotifyArtist[]
 
+  name: string
+  id: string
+
   duration_ms: number
 }
 
 export interface SpotifyProvider {
-  getTopTracks(): Promise<object>
-  getTopArtists(): Promise<SpotifyArtist[]>
+  getTopTracks(access_token: string): Promise<SpotifyTrack[]>
+  getTopArtists(access_token: string): Promise<SpotifyArtist[]>
   getTokensByCode(
     code: string,
     state?: string

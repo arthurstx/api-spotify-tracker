@@ -12,8 +12,12 @@ import { fastifyCors } from '@fastify/cors'
 import ScalarApiReference from '@scalar/fastify-api-reference'
 import { authRoutes } from './http/controllers/auth/routes.js'
 import { spotifyProviderRoutes } from './http/providers/spotify-provider/controllers/routes.js'
+import { snapshotRoutes } from './http/controllers/snapshot/routes.js'
+import dns from 'node:dns'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
+
+dns.setDefaultResultOrder('ipv4first')
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
@@ -40,6 +44,7 @@ app.register(ScalarApiReference, {
 /**----- Routes -----*/
 app.register(spotifyProviderRoutes)
 app.register(authRoutes)
+app.register(snapshotRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

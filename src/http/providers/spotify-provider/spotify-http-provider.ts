@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {
-  SpotifyArtist,
   SpotifyProvider,
   SpotifyProviderAuthenticationResponse,
   SpotifyTrack,
@@ -60,12 +59,45 @@ export class SpotifyHttpProvider implements SpotifyProvider {
 
     return data
   }
-  getTopTracks(): Promise<SpotifyTrack[]> {
-    throw new Error('Method not implemented.')
+
+  async getTopTracks(access_token: string): Promise<SpotifyTrack[]> {
+    const response = await axios.get(
+      'https://api.spotify.com/v1/me/top/tracks',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          limit: 50,
+          time_range: 'medium_term',
+        },
+      }
+    )
+
+    const data = response.data.items
+
+    return data
   }
-  getTopArtists(): Promise<SpotifyArtist[]> {
-    throw new Error('Method not implemented.')
+
+  async getTopArtists(access_token: string) {
+    const response = await axios.get(
+      'https://api.spotify.com/v1/me/top/artists',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          limit: 50,
+          time_range: 'medium_term',
+        },
+      }
+    )
+
+    const data = response.data.items
+
+    return data
   }
+
   async refreshAcessToken(refreshToken: string) {
     const response = await axios.post(
       'https://accounts.spotify.com/api/token',

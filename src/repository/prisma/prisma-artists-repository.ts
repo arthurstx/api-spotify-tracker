@@ -44,7 +44,7 @@ export class PrismaArtistsRepository
     const operations = data.map((artist) =>
       prisma.artist.upsert({
         where: {
-          id: artist.id,
+          id: artist.spotifyId,
         },
         update: {
           name: artist.name,

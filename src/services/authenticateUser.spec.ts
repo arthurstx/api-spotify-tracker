@@ -1,20 +1,20 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { SpotifyProviderMock } from '../provider/mock/SpotifyProviderMock'
 import { UsersRepository } from '../repository/user-repository'
-import { authenticateUserUseCase } from './authenticateUser'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { AuthenticationError } from './errors/authentication-Error'
 import { GetProfileError } from './errors/get-profile-error'
+import { AuthenticateUserUseCase } from './authenticateUser'
 
 let userRepository: UsersRepository
 let spotifyProvider: SpotifyProviderMock
-let sut: authenticateUserUseCase
+let sut: AuthenticateUserUseCase
 
 describe('Authenticate use case', () => {
   beforeEach(() => {
     userRepository = new InMemoryUserRepository()
     spotifyProvider = new SpotifyProviderMock()
-    sut = new authenticateUserUseCase(userRepository, spotifyProvider)
+    sut = new AuthenticateUserUseCase(userRepository, spotifyProvider)
   })
 
   it('should authenticate and create a new user', async () => {

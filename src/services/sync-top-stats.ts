@@ -23,7 +23,7 @@ interface SyncTopStatsUseCaseResponse {
 }
 
 function mapExternalArtistToArtist(rawArtist: SpotifyArtist) {
-  const image = rawArtist.image?.[0]?.url ?? null
+  const image = rawArtist.images?.[0]?.url ?? null
   return {
     name: rawArtist.name,
     imageUrl: image,
@@ -32,11 +32,11 @@ function mapExternalArtistToArtist(rawArtist: SpotifyArtist) {
 }
 
 function mapExternalTrackToTrack(rawTrack: SpotifyTrack) {
-  const image = rawTrack.artists[0].image[0].url ?? null
+  const image = rawTrack.artists[0].images?.[0]?.url ?? null
   return {
-    name: rawTrack.album.name,
+    name: rawTrack.name,
     imageUrl: image,
-    spotifyId: rawTrack.album.id,
+    spotifyId: rawTrack.id,
     durationMs: rawTrack.duration_ms,
   } as Track
 }
@@ -105,8 +105,13 @@ export class SyncTopStatsUseCase {
       throw new SyncAlreadyDoneError()
     }
 
-    const topArtistsResponse = await this.spotifyProvider.getTopArtists()
-    const topTracksResponse = await this.spotifyProvider.getTopTracks()
+    const topArtistsResponse = await this.spotifyProvider.getTopArtists(
+      user.accessToken
+    )
+    const topTracksResponse = await this.spotifyProvider.getTopTracks(
+      user.accessToken
+    )
+
     const NormalizeArtist = topArtistsResponse.map(mapExternalArtistToArtist)
     const NormalizeTrack = topTracksResponse.map(mapExternalTrackToTrack)
 
@@ -114,6 +119,7 @@ export class SyncTopStatsUseCase {
       userId,
       date: new Date(),
     })
+    console.log(NormalizeArtist)
 
     const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
     const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)
