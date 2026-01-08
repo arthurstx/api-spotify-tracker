@@ -40,6 +40,8 @@ export class GetDailySnapshotUseCase {
   }: GetDailySnapshotUseCaseRequest): Promise<GetDailySnapshotUseCaseResponse> {
     const user = await this.usersRepository.findByUserId(userId)
 
+    console.log(snapshotDate, timeRange, userId)
+
     if (!user) {
       throw new UserNotFoundError()
     }

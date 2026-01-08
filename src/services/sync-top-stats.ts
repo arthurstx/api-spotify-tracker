@@ -147,11 +147,7 @@ export class SyncTopStatsUseCase {
       }
     })
 
-    const countTA = await this.trackArtistsRepository.create(
-      trackAndArtistSpotifyIds
-    )
-    console.log(countTA)
-
+    await this.trackArtistsRepository.create(trackAndArtistSpotifyIds)
     const count = countArtist.count + countTracks.count
     return { count }
   }
