@@ -14,6 +14,7 @@ import { authRoutes } from './http/controllers/auth/routes.js'
 import { spotifyProviderRoutes } from './http/providers/spotify-provider/controllers/routes.js'
 import { snapshotRoutes } from './http/controllers/snapshot/routes.js'
 import dns from 'node:dns'
+import { rankingsRoutes } from './http/controllers/rankings/routes.js'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -45,6 +46,7 @@ app.register(ScalarApiReference, {
 app.register(spotifyProviderRoutes)
 app.register(authRoutes)
 app.register(snapshotRoutes)
+app.register(rankingsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

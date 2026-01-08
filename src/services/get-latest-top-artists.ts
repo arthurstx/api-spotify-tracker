@@ -47,7 +47,7 @@ export class GetLatestTopArtistsseCase {
     const { artist } =
       await this.artistRankingsRead.fetchDailyArtistsWithRankings(
         snapshot.id,
-        timeRange
+        timeRange ? timeRange : TimeRange.MEDIUM_TERM
       )
 
     return { snapshotDate: snapshot.createdAt, artist }
