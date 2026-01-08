@@ -1,4 +1,6 @@
 import { SnapShotsRepository } from '../repository/snapshots-repository'
+import { UsersRepository } from '../repository/user-repository'
+import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface ListAvailableSnapshotsUseCaseRequest {
   userId: string
@@ -9,11 +11,20 @@ interface ListAvailableSnapshotsUseCaseResponse {
 }
 
 export class ListAvailableSnapshotsUseCase {
-  constructor(private snapshotRepository: SnapShotsRepository) {}
+  constructor(
+    private userRepository: UsersRepository,
+    private snapshotRepository: SnapShotsRepository
+  ) {}
 
   async execute({
     userId,
   }: ListAvailableSnapshotsUseCaseRequest): Promise<ListAvailableSnapshotsUseCaseResponse> {
+    const user = this.userRepository.findByUserId(userId)
+
+    if (!user) {
+      throw new UserNotFoundError()
+    }
+
     const snapshotDate =
       await this.snapshotRepository.fetchManySnapshotDatesByUserId(userId)
 
