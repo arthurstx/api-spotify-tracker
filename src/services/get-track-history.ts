@@ -2,6 +2,7 @@ import { TimeRange } from '../../generated/prisma/enums'
 import { TrackRankingReadRepository } from '../repository/track-rankings-repository'
 import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
+import { TrackNotFoundError } from './errors/track-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetTrackHistoryUseCaseRequest {
@@ -46,13 +47,13 @@ export class GetTrackHistoryUseCase {
     const track = await this.trackReadRepository.findByTrackId(trackId)
 
     if (!track) {
-      throw new Error()
+      throw new TrackNotFoundError()
     }
 
     const history = await this.trackRankingRead.fetchHistory(
       userId,
       trackId,
-      timeRange
+      timeRange ? timeRange : TimeRange.MEDIUM_TERM
     )
 
     return { track, history }

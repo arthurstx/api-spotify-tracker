@@ -5,13 +5,13 @@ import { UsersRepository } from '../repository/user-repository'
 import { ArtistNotFoundError } from './errors/artist-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
-interface GetArtistHistoryseCaseRequest {
+interface GetArtistHistoryUseCaseRequest {
   userId: string
   artistId: string
   timeRange?: TimeRange
 }
 
-interface GetArtistHistoryseCaseResponse {
+interface GetArtistHistoryUseCaseResponse {
   artist: {
     id: string
     name: string
@@ -25,7 +25,7 @@ interface GetArtistHistoryseCaseResponse {
   }>
 }
 
-export class GetArtistHistoryseCase {
+export class GetArtistHistoryUseCase {
   constructor(
     private artistRepository: ArtistsRepository,
     private userRepository: UsersRepository,
@@ -36,7 +36,7 @@ export class GetArtistHistoryseCase {
     userId,
     artistId,
     timeRange,
-  }: GetArtistHistoryseCaseRequest): Promise<GetArtistHistoryseCaseResponse> {
+  }: GetArtistHistoryUseCaseRequest): Promise<GetArtistHistoryUseCaseResponse> {
     const user = await this.userRepository.findByUserId(userId)
 
     if (!user) {
