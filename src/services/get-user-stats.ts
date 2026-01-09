@@ -2,6 +2,7 @@ import { ArtistReadRepository } from '../repository/artists-repository'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
+import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetUserStatsUseCaseRequest {
@@ -37,6 +38,10 @@ export class GetUserStatsUseCase {
     }
 
     const snapshots = await this.snapshotRepository.fetchManyByUserId(userId)
+
+    if (!snapshots) {
+      throw new SnapshotNotFoundError()
+    }
 
     const artists = await this.artistsReadRepository.listTrackedByUser(userId)
 

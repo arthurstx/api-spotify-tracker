@@ -16,6 +16,7 @@ import { snapshotRoutes } from './http/controllers/snapshot/routes.js'
 import dns from 'node:dns'
 import { rankingsRoutes } from './http/controllers/rankings/routes.js'
 import { historyRoutes } from './http/controllers/history/routes.js'
+import { catalogRoutes } from './http/controllers/catolog/routes.js'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -49,6 +50,7 @@ app.register(authRoutes)
 app.register(snapshotRoutes)
 app.register(rankingsRoutes)
 app.register(historyRoutes)
+app.register(catalogRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
