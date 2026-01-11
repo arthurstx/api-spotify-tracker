@@ -39,8 +39,14 @@ export class GetUserStatsUseCase {
 
     const snapshots = await this.snapshotRepository.fetchManyByUserId(userId)
 
-    if (!snapshots) {
-      throw new SnapshotNotFoundError()
+    if (snapshots.length === 0) {
+      return {
+        totalSnapshots: 0,
+        totalTrackedArtists: 0,
+        totalTrackedTracks: 0,
+        firstSnapshotDate: undefined,
+        lastSnapshotDate: undefined,
+      }
     }
 
     const artists = await this.artistsReadRepository.listTrackedByUser(userId)

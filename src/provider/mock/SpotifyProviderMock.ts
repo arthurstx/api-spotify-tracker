@@ -170,20 +170,22 @@ export class SpotifyProviderMock implements SpotifyProvider {
   }
 
   async refreshAcessToken(refreshToken: string) {
-    if (refreshToken != 'refresh_token') {
+    if (refreshToken !== 'refresh_token') {
       return null
     }
 
     const response: SpotifyProviderRefreshTokenResponse = {
-      accessToken: 'new-access-token',
+      access_token: 'new-access-token',
       expires_in: 3600,
-      newRefreshToken: 'new-refresh-token',
+      refresh_token: 'new-refresh-token',
+      scope: 'user-top-read',
+      token_type: 'Bearer',
     }
     return response
   }
 
   async getTokensByCode(code: string) {
-    if (code != 'valid-code') {
+    if (code !== 'valid-code') {
       return null
     }
 
@@ -195,15 +197,16 @@ export class SpotifyProviderMock implements SpotifyProvider {
 
     return response
   }
+
   async getMe(acess_token: string) {
-    if (acess_token != 'acces_token') {
+    if (acess_token !== 'acces_token') {
       return null
     }
     const response: SpotifyProviderGetMeResponse = {
-      displayName: 'jhon doe',
-      imageUrl: 'imageurl',
+      display_name: 'jhon doe',
+      images: [{ url: 'imageurl' }],
       email: 'jhondoe@example.com',
-      spotifyId: 'spotify_id',
+      id: 'spotify_id',
     }
     return response
   }

@@ -20,6 +20,7 @@ describe('Authenticate use case', () => {
   it('should authenticate and create a new user', async () => {
     const user = await sut.execute({
       code: 'valid-code',
+      state: 'valid-state',
     })
 
     expect(user.user).toBeDefined()
@@ -40,6 +41,7 @@ describe('Authenticate use case', () => {
 
     const user = await sut.execute({
       code: 'valid-code',
+      state: 'valid-state',
     })
 
     expect(user.user.id).toEqual(existingUser.id)
@@ -50,7 +52,7 @@ describe('Authenticate use case', () => {
 
   it('should throw AuthenticationError if spotify does not return tokens', async () => {
     await expect(() =>
-      sut.execute({ code: 'invalid-code' })
+      sut.execute({ code: 'invalid-code', state: 'invalid-state' })
     ).rejects.toBeInstanceOf(AuthenticationError)
   })
 
@@ -58,7 +60,7 @@ describe('Authenticate use case', () => {
     spotifyProvider.getMe = async () => null
 
     await expect(() =>
-      sut.execute({ code: 'valid-code' })
+      sut.execute({ code: 'valid-code', state: 'valid-state' })
     ).rejects.toBeInstanceOf(GetProfileError)
   })
 })

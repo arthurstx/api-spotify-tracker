@@ -2,23 +2,24 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { UsersRepository } from '../repository/user-repository'
 import { InMemoryUserRepository } from '../repository/in-memory-repository/in-memory-user-repository'
 import { TimeRange } from '../../generated/prisma/enums'
-import { GetArtistHistoryseCase } from './get-artist-history'
+import { GetArtistHistoryUseCase } from './get-artist-history'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { InMemoryArtistRankingsReadRepository } from '../repository/in-memory-repository/in-memory-artist-rankings-read-repository'
 import { InMemoryArtistsRepository } from '../repository/in-memory-repository/in-memory-artists-repository'
+import { ArtistNotFoundError } from './errors/artist-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
 let usersRepository: UsersRepository
 let artistRepository: ArtistsRepository
 let artistRankingsRead: InMemoryArtistRankingsReadRepository
-let sut: GetArtistHistoryseCase // System Under Test
+let sut: GetArtistHistoryUseCase // System Under Test
 
 describe('Get Artist History Use Case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUserRepository()
     artistRepository = new InMemoryArtistsRepository()
     artistRankingsRead = new InMemoryArtistRankingsReadRepository([], [], [])
-    sut = new GetArtistHistoryseCase(
+    sut = new GetArtistHistoryUseCase(
       artistRepository,
       usersRepository,
       artistRankingsRead
@@ -88,5 +89,24 @@ describe('Get Artist History Use Case', () => {
         artistId: 'track-1',
       })
     ).rejects.toBeInstanceOf(UserNotFoundError)
+  })
+
+  it('should throw error if artist does not exist', async () => {
+    await usersRepository.create({
+      id: 'user-01',
+      spotifyId: 'spotify_id',
+      email: 'jhondoe@email.com',
+      accessToken: 'old_token',
+      refreshToken: 'refresh_token',
+      displayName: 'jhon doe',
+      tokenExpiresAt: new Date(),
+    })
+
+    await expect(
+      sut.execute({
+        userId: 'user-01',
+        artistId: 'non-existent',
+      })
+    ).rejects.toBeInstanceOf(ArtistNotFoundError)
   })
 })

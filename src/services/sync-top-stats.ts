@@ -96,7 +96,11 @@ export class SyncTopStatsUseCase {
         this.spotifyProvider
       )
 
-      refreshToken.execute({ userId })
+      const { accessToken, tokenExpiresAt } = await refreshToken.execute({
+        userId,
+      })
+      user.accessToken = accessToken
+      user.tokenExpiresAt = tokenExpiresAt
     }
 
     const existingSnapshot = await this.snapShotRepository.findByUserAndDate(

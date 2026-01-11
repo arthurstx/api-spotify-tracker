@@ -19,7 +19,7 @@ export class ListAvailableSnapshotsUseCase {
   async execute({
     userId,
   }: ListAvailableSnapshotsUseCaseRequest): Promise<ListAvailableSnapshotsUseCaseResponse> {
-    const user = this.userRepository.findByUserId(userId)
+    const user = await this.userRepository.findByUserId(userId)
 
     if (!user) {
       throw new UserNotFoundError()

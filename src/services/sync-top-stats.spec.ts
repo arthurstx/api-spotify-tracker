@@ -1,3 +1,4 @@
+import { InMemoryTrackArtistsRepository } from '../repository/in-memory-repository/in-memory-track-artists-repository'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { SpotifyProviderMock } from '../provider/mock/SpotifyProviderMock'
 import type { UsersRepository } from '../repository/user-repository'
@@ -15,6 +16,7 @@ import { InMemoryArtistRankingRepository } from '../repository/in-memory-reposit
 import { SyncTopStatsUseCase } from './sync-top-stats'
 import { UserNotFoundError } from './errors/user-not-found-error'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
+import { TrackArtistsRepository } from '../repository/track-artists-repository'
 
 let userRepository: UsersRepository
 let artistsRepository: ArtistsRepository
@@ -23,6 +25,7 @@ let tracksRepository: TracksRepository
 let trackRankingsRepository: TrackRankingsRepository
 let snapShotsRepository: SnapShotsRepository
 let spotifyProvider: SpotifyProviderMock
+let trackArtistsRepository: TrackArtistsRepository
 let sut: SyncTopStatsUseCase
 
 describe('sync top stats use case', () => {
@@ -33,9 +36,11 @@ describe('sync top stats use case', () => {
     tracksRepository = new InMemoryTracksRepository()
     trackRankingsRepository = new InMemoryTrackRankingsRepository()
     snapShotsRepository = new InMemorySnapShotsRepository()
+    trackArtistsRepository = new InMemoryTrackArtistsRepository()
     spotifyProvider = new SpotifyProviderMock()
     sut = new SyncTopStatsUseCase(
       userRepository,
+      trackArtistsRepository,
       artistsRepository,
       artistRankingsRepository,
       tracksRepository,

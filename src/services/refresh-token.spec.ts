@@ -20,7 +20,7 @@ describe('Refresh token use case', () => {
   it('should be able to refresh token with new refresh token', async () => {
     const userId = 'user-01'
 
-    const user = await userRepository.create({
+    await userRepository.create({
       id: userId,
       spotifyId: 'spotify_id',
       email: 'jhondoe@email.com',
@@ -30,23 +30,15 @@ describe('Refresh token use case', () => {
       tokenExpiresAt: new Date(),
     })
 
-    await sut.execute({ userId })
+    const { accessToken } = await sut.execute({ userId })
 
-    const response = await spotifyProvider.refreshAcessToken(userId)
-
-    if (!response) {
-      return null
-    }
-
-    const { accessToken } = response
-
-    expect(user.accessToken).toEqual(accessToken)
+    expect(accessToken).toEqual('new-access-token')
   })
 
   it('should be able to refresh token whitout a new refresh token', async () => {
     const userId = 'user-01'
 
-    const user = await userRepository.create({
+    await userRepository.create({
       id: userId,
       spotifyId: 'spotify_id',
       email: 'jhondoe@email.com',
@@ -59,23 +51,17 @@ describe('Refresh token use case', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     spotifyProvider.refreshAcessToken = async (_refreshToken: string) => {
       return {
-        accessToken: 'new-access-token',
+        access_token: 'new-access-token',
         expires_in: 3600,
-        newRefreshToken: null,
+        refresh_token: 'new-refresh-token',
+        scope: 'user-top-read',
+        token_type: 'Bearer',
       }
     }
 
-    await sut.execute({ userId })
+    const { accessToken } = await sut.execute({ userId })
 
-    const response = await spotifyProvider.refreshAcessToken(userId)
-
-    if (!response) {
-      return null
-    }
-
-    const { accessToken } = response
-
-    expect(user.accessToken).toEqual(accessToken)
+    expect(accessToken).toEqual('new-access-token')
   })
   it('should not be able to fetch user', async () => {
     await userRepository.create({

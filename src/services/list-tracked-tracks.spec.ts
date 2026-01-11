@@ -79,7 +79,7 @@ describe('List Tracked Tracks Use Case', () => {
     expect(tracks[0]).toEqual(
       expect.objectContaining({
         name: 'Track 1',
-        artistsName: 'Artist 1',
+        artistsName: ['Artist 1'],
       })
     )
   })
