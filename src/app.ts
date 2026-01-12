@@ -10,13 +10,13 @@ import {
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifyCors } from '@fastify/cors'
 import ScalarApiReference from '@scalar/fastify-api-reference'
-import { authRoutes } from './http/controllers/auth/routes.js'
+import { authRoutes } from './http/controller/auth/routes.js'
 import { spotifyProviderRoutes } from './http/providers/spotify-provider/controllers/routes.js'
-import { snapshotRoutes } from './http/controllers/snapshot/routes.js'
+import { snapshotRoutes } from './http/controller/snapshot/routes.js'
 import dns from 'node:dns'
-import { rankingsRoutes } from './http/controllers/rankings/routes.js'
-import { historyRoutes } from './http/controllers/history/routes.js'
-import { catalogRoutes } from './http/controllers/catolog/routes.js'
+import { rankingsRoutes } from './http/controller/rankings/routes.js'
+import { historyRoutes } from './http/controller/history/routes.js'
+import { catalogRoutes } from './http/controller/catolog/routes.js'
 import { userRoutes } from './http/user/routes.js'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()

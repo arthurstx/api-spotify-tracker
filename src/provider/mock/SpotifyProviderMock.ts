@@ -1,6 +1,5 @@
 import {
   SpotifyProvider,
-  type SpotifyProviderGetMeResponse,
   type SpotifyProviderAuthenticationResponse,
   SpotifyProviderRefreshTokenResponse,
   type SpotifyArtist,
@@ -43,10 +42,15 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'Linkin Park',
             type: 'artist',
             uri: 'spotify:artist:a1',
-            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            genres: [],
+            popularity: 0,
           },
         ],
         duration_ms: 202000,
+        name: '',
+        id: '',
+        images: [],
       },
       {
         album: {
@@ -81,10 +85,15 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'AC/DC',
             type: 'artist',
             uri: 'spotify:artist:a2',
-            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            genres: [],
+            popularity: 0,
           },
         ],
         duration_ms: 210000,
+        name: '',
+        id: '',
+        images: [],
       },
       {
         album: {
@@ -119,10 +128,15 @@ export class SpotifyProviderMock implements SpotifyProvider {
             name: 'Queen',
             type: 'artist',
             uri: 'spotify:artist:a3',
-            image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+            genres: [],
+            popularity: 0,
           },
         ],
         duration_ms: 215000,
+        name: '',
+        id: '',
+        images: [],
       },
     ]
 
@@ -135,35 +149,41 @@ export class SpotifyProviderMock implements SpotifyProvider {
         name: 'Queen',
         type: 'artist',
         uri: 'spotify:artist:1dfeR4HaWDbWqFHLkxsg1d',
-        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+        images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
         href: 'https://api.spotify.com/v1/artists/1dfeR4HaWDbWqFHLkxsg1d',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/1dfeR4HaWDbWqFHLkxsg1d',
         },
+        genres: [],
+        popularity: 0,
       },
       {
         id: '3WrFJ7ztbogyGnTHbHJFl2',
         name: 'The Beatles',
         type: 'artist',
         uri: 'spotify:artist:3WrFJ7ztbogyGnTHbHJFl2',
-        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+        images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
 
         href: 'https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2',
         },
+        genres: [],
+        popularity: 0,
       },
       {
         id: '711MCceyCBcFnzjGY4Q7Un',
         name: 'AC/DC',
         type: 'artist',
         uri: 'spotify:artist:711MCceyCBcFnzjGY4Q7Un',
-        image: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
+        images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
 
         href: 'https://api.spotify.com/v1/artists/711MCceyCBcFnzjGY4Q7Un',
         external_urls: {
           spotify: 'https://open.spotify.com/artist/711MCceyCBcFnzjGY4Q7Un',
         },
+        genres: [],
+        popularity: 0,
       },
     ]
     return artists
@@ -202,7 +222,7 @@ export class SpotifyProviderMock implements SpotifyProvider {
     if (acess_token !== 'acces_token') {
       return null
     }
-    const response: SpotifyProviderGetMeResponse = {
+    const response = {
       display_name: 'jhon doe',
       images: [{ url: 'imageurl' }],
       email: 'jhondoe@example.com',

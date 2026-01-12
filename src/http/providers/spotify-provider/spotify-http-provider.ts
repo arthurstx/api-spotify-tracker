@@ -4,6 +4,7 @@ import {
   SpotifyProviderAuthenticationResponse,
   SpotifyTrack,
 } from '../../../provider/spotify-provider-types'
+import { TimeRange } from '../../../../generated/prisma/enums'
 
 interface tokenResponse {
   access_token: string
@@ -48,10 +49,10 @@ export class SpotifyHttpProvider implements SpotifyProvider {
     } as SpotifyProviderAuthenticationResponse
   }
 
-  async getMe(acess_token: string) {
+  async getMe(access_token: string) {
     const response = await axios.get('https://api.spotify.com/v1/me', {
       headers: {
-        Authorization: 'Bearer ' + acess_token,
+        Authorization: `Bearer ${access_token}`,
       },
     })
 
@@ -69,7 +70,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
         },
         params: {
           limit: 50,
-          time_range: 'medium_term',
+          time_range: TimeRange.SHORT_TERM,
         },
       }
     )
@@ -88,7 +89,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
         },
         params: {
           limit: 50,
-          time_range: 'medium_term',
+          time_range: TimeRange.SHORT_TERM,
         },
       }
     )

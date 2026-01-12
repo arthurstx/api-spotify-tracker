@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test:coverage": "vitest run --coverage",
-    "test": "vitest run ",
-    "test:watch": "vitest "
+    "test": "vitest run --project unit",
+    "test:e2e": "vitest run --project e2e",
+    "test:watch": "vitest --project unit",
+    "test:e2e:watch": "vitest --project e2e"
   },
   "keywords": [],
   "author": "",
@@ -31,9 +33,11 @@
     "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^4.0.16",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
+    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

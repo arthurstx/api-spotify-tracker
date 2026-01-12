@@ -1,4 +1,5 @@
 import { SpotifyHttpProvider } from '../../http/providers/spotify-provider/spotify-http-provider'
+import { SpotifyProviderMock } from '../../provider/mock/SpotifyProviderMock'
 import { PrismaArtistsRankingsRepository } from '../../repository/prisma/prisma-artist-rankings-repository'
 import { PrismaArtistsRepository } from '../../repository/prisma/prisma-artists-repository'
 import { PrismaSnapshotRepository } from '../../repository/prisma/prisma-snapshots-repository'
@@ -16,7 +17,10 @@ export function makeSyncTopStatsUseCase() {
   const trackArtist = new PrismaTrackArtistsRepository()
   const trackRankingsRepository = new PrismaTrackRankingsRepository()
   const snapShotRepository = new PrismaSnapshotRepository()
-  const spotifyProvider = new SpotifyHttpProvider()
+  const spotifyProvider =
+    process.env.NODE_ENV === 'test'
+      ? new SpotifyProviderMock()
+      : new SpotifyHttpProvider()
   const useCase = new SyncTopStatsUseCase(
     userRepository,
     trackArtist,
