@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { app } from '../../../app'
-import { createAndAuthenticateUser } from '../../../utils/test/create-and-authenticate-user'
+import { syncTopStatsAndAuth } from '../../../utils/test/sync-top-stats-and-auth'
 
 describe('Get Latest Artist (e2e)', () => {
   beforeAll(async () => {
@@ -13,19 +13,18 @@ describe('Get Latest Artist (e2e)', () => {
   })
 
   it('should be able to get latest artists', async () => {
-    const { authResponse } = await createAndAuthenticateUser(app)
-    const { spotify_id: spotifyId } = authResponse.body
+    const { authResponse } = await syncTopStatsAndAuth(app)
+    const { id } = authResponse.body
 
     const response = await request(app.server)
-      .get(`/rankings/artists`)
-      .set('Authorization', `Bearer ${spotifyId}`)
-      .send()
-
+      .post(`/rankings/get-latest-artists?id=${id}`)
+      .send({})
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual(
       expect.objectContaining({
         artists: expect.any(Array),
-      }),
+        snapshotDate: expect.any(String),
+      })
     )
   })
 })

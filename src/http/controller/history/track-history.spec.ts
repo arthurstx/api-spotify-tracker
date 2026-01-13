@@ -1,8 +1,8 @@
 import request from 'supertest'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { app } from '../../../app'
-import { createAndAuthenticateUser } from '../../../utils/test/create-and-authenticate-user'
 import { prisma } from '../../../lib/prisma'
+import { syncTopStatsAndAuth } from '../../../utils/test/sync-top-stats-and-auth'
 
 describe('Track History (e2e)', () => {
   beforeAll(async () => {
@@ -14,15 +14,14 @@ describe('Track History (e2e)', () => {
   })
 
   it('should be able to get track history', async () => {
-    const { authResponse } = await createAndAuthenticateUser(app)
-    const { spotify_id: spotifyId } = authResponse.body
+    const { authResponse } = await syncTopStatsAndAuth(app)
+    const { id } = authResponse.body
 
-    const track = await prisma.track.findFirstOrThrow()
+    const { id: trackId } = await prisma.track.findFirstOrThrow()
 
     const response = await request(app.server)
-      .get(`/history/track/${track.id}`)
-      .set('Authorization', `Bearer ${spotifyId}`)
-      .send()
+      .post(`/history/track-history?id=${id}`)
+      .send({ trackId })
 
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual(
@@ -32,7 +31,7 @@ describe('Track History (e2e)', () => {
           imageUrl: expect.any(String),
         }),
         history: expect.any(Array),
-      }),
+      })
     )
   })
 })

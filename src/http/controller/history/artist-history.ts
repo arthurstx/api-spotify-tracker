@@ -32,7 +32,7 @@ export async function artistHistory(
       artistId,
       timeRange, // TODO : fix me
     })
-    reply.status(201).send({ artist, history })
+    reply.status(200).send({ artist, history })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

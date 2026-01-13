@@ -32,7 +32,7 @@ export async function trackHistory(
       trackId,
       timeRange, // TODO : fix me
     })
-    reply.status(201).send({ track, history })
+    reply.status(200).send({ track, history })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

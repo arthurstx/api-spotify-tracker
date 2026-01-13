@@ -30,7 +30,7 @@ export async function getLatestArtists(
       userId: id,
       timeRange, // TODO : fix me
     })
-    reply.status(201).send({ artist, snapshotDate })
+    reply.status(200).send({ artist, snapshotDate })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

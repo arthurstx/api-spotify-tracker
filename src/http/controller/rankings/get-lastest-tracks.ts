@@ -30,7 +30,7 @@ export async function getLatestTrack(
       userId: id,
       timeRange, // TODO : fix me
     })
-    reply.status(201).send({ track, snapshotDate })
+    reply.status(200).send({ track, snapshotDate })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

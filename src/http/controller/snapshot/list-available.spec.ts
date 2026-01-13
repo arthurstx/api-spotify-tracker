@@ -20,8 +20,6 @@ describe('List Available (e2e)', () => {
       .get(`/snapshot/list-available?id=${id}`)
       .send()
 
-    console.log(response.body.snapshotDate)
-
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual(
       expect.objectContaining({

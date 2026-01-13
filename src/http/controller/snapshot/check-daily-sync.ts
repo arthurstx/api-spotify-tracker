@@ -19,7 +19,7 @@ export async function syncStatus(request: FastifyRequest, reply: FastifyReply) {
       await checkDailySyncStatusUseCase.execute({
         userId: id,
       })
-    reply.status(201).send({ hasSnapshotToday, snapshotDate })
+    reply.status(200).send({ hasSnapshotToday, snapshotDate })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })
