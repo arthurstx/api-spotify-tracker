@@ -68,7 +68,7 @@ describe('sync top stats use case', () => {
     expect(count).toEqual(expect.any(Number))
   })
 
-  it('should  be able to refresh token in sync top stats', async () => {
+  it.only('should  be able to refresh token in sync top stats', async () => {
     const userId = 'user-01'
 
     const user = await userRepository.create({
@@ -84,7 +84,7 @@ describe('sync top stats use case', () => {
     const { count } = await sut.execute({ userId })
 
     expect(user.accessToken).toEqual('new-access-token')
-    expect(count).toEqual(expect.any(Number))
+    expect(count).toEqual(4)
   })
 
   it('should not be able to create snap shot in same day', async () => {

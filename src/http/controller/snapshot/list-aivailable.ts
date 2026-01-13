@@ -21,7 +21,7 @@ export async function listAvailable(
     const { snapshotDate } = await GetDailySnapshotUseCase.execute({
       userId: id,
     })
-    reply.status(201).send({ snapshotDate })
+    reply.status(200).send({ snapshotDate })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

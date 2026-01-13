@@ -36,7 +36,7 @@ export class PrismaTrackRankingsRepository
     return count
   }
 
-  async fetchDailyArtistsWithRankings(
+  async fetchDailyTracksWithRankings(
     snapshotId: string,
     timeRange: TimeRange
   ): Promise<FormatedTracks> {

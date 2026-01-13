@@ -21,8 +21,8 @@ interface GetDailySnapshotUseCaseRequest {
 
 interface GetDailySnapshotUseCaseResponse {
   snapshotDate: Date
-  formatedArtists: FormatedArtists
-  formatedTracks: FormatedTracks
+  artists: FormatedArtists['artist']
+  tracks: FormatedTracks['track']
 }
 
 export class GetDailySnapshotUseCase {
@@ -53,22 +53,21 @@ export class GetDailySnapshotUseCase {
       throw new SnapshotNotFoundError()
     }
 
-    const formatedArtists =
+    const { artist } =
       await this.artistRankingRead.fetchDailyArtistsWithRankings(
         snapShot.id,
         timeRange
       )
 
-    const formatedTracks =
-      await this.trackRankingRead.fetchDailyArtistsWithRankings(
-        snapShot.id,
-        timeRange
-      )
+    const { track } = await this.trackRankingRead.fetchDailyTracksWithRankings(
+      snapShot.id,
+      timeRange
+    )
 
     return {
       snapshotDate,
-      formatedArtists,
-      formatedTracks,
+      artists: artist,
+      tracks: track,
     }
   }
 }

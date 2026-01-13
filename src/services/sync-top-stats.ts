@@ -114,6 +114,7 @@ export class SyncTopStatsUseCase {
     const topArtistsResponse = await this.spotifyProvider.getTopArtists(
       user.accessToken
     )
+
     const topTracksResponse = await this.spotifyProvider.getTopTracks(
       user.accessToken
     )

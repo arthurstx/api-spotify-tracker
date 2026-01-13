@@ -32,7 +32,7 @@ export interface FormatedTracks {
 }
 
 export interface TrackRankingReadRepository {
-  fetchDailyArtistsWithRankings(
+  fetchDailyTracksWithRankings(
     snapshotId: string,
     timeRange: TimeRange
   ): Promise<FormatedTracks>

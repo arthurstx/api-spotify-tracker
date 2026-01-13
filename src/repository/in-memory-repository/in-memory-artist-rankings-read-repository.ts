@@ -4,7 +4,7 @@ import {
   Snapshot,
   TimeRange,
 } from '../../../generated/prisma/browser'
-import { ArtistRankingsReadRepository } from '../artist-rankings-read-repository'
+import { ArtistRankingsReadRepository } from '../artist-rankings-repository'
 
 export class InMemoryArtistRankingsReadRepository
   implements ArtistRankingsReadRepository

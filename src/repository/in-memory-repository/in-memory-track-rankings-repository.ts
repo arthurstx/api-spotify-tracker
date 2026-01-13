@@ -5,6 +5,7 @@ import {
   TrackRankingsProps,
   TrackRankingsRepository,
 } from '../track-rankings-repository'
+import { BatchPayload } from '../../../generated/prisma/internal/prismaNamespace'
 
 export class InMemoryTrackRankingsRepository
   implements TrackRankingsRepository
@@ -23,9 +24,7 @@ export class InMemoryTrackRankingsRepository
     return trackRankings
   }
 
-  async createMany(
-    data: TrackRankingUncheckedCreateInput[]
-  ): Promise<TrackRanking[]> {
+  async createMany(data: TrackRankingUncheckedCreateInput[]) {
     const trackRanking = data.map((item) => ({
       id: randomUUID() ?? item.id,
       trackId: item.trackId,
@@ -34,6 +33,10 @@ export class InMemoryTrackRankingsRepository
       timeRange: item.timeRange,
     }))
     this.items.push(...trackRanking)
-    return trackRanking
+    const batchPayload: { count: number } = {
+      count: trackRanking.length,
+    }
+
+    return batchPayload as unknown as BatchPayload
   }
 }

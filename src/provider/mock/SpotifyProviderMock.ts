@@ -4,139 +4,48 @@ import {
   SpotifyProviderRefreshTokenResponse,
   type SpotifyArtist,
   SpotifyTrack,
+  SpotifyUserProfile,
 } from '../spotify-provider-types'
 
 export class SpotifyProviderMock implements SpotifyProvider {
   async getTopTracks() {
     const spotifyAlbumsMock: SpotifyTrack[] = [
       {
+        id: '6qylu0VNKUfKiVi88WL3Ci',
+        name: 'Marolento',
+        duration_ms: 161379,
+        images: [{ url: 'urlDaImagem', width: 300, height: 300 }],
+        artists: [
+          {
+            id: '0zbO4WWM2wJM3ulFmCbMwB',
+            name: 'Puterrier',
+            type: 'artist',
+            uri: 'spotify:artist:0zbO4WWM2wJM3ulFmCbMwB',
+            external_urls: {
+              spotify: 'https://open.spotify.com/artist/0zbO4WWM2wJM3ulFmCbMwB',
+            },
+            genres: [],
+            href: 'https://api.spotify.com/v1/artists/0zbO4WWM2wJM3ulFmCbMwB',
+            images: [{ url: 'urlDaImagem', width: 300, height: 300 }],
+            popularity: 0,
+          },
+        ],
         album: {
-          album_type: 'album' as const,
-          total_tracks: 12,
+          id: 'album1',
+          name: 'Album Name',
+          type: 'album',
+          uri: 'spotify:album:album1',
+          external_urls: {
+            spotify: 'https://open.spotify.com/album/album1',
+          },
+          href: 'https://api.spotify.com/v1/albums/album1',
+          images: [{ url: 'urlDaImagem', width: 300, height: 300 }],
+          release_date: '2023-01-01',
+          release_date_precision: 'day',
+          album_type: 'album',
+          total_tracks: 1,
           available_markets: ['BR', 'US'],
-          external_urls: {
-            spotify: 'https://open.spotify.com/album/1',
-          },
-          href: 'https://api.spotify.com/v1/albums/1',
-          id: '1',
-          images: [
-            {
-              url: 'https://i.scdn.co/image/ab67616d00001e021111',
-              height: 300,
-              width: 300,
-            },
-          ],
-          name: 'Hybrid Theory',
-          release_date: '2000-10-24',
-          release_date_precision: 'day',
-          type: 'album',
-          uri: 'spotify:album:1',
         },
-        artists: [
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/a1',
-            },
-            href: 'https://api.spotify.com/v1/artists/a1',
-            id: 'a1',
-            name: 'Linkin Park',
-            type: 'artist',
-            uri: 'spotify:artist:a1',
-            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
-            genres: [],
-            popularity: 0,
-          },
-        ],
-        duration_ms: 202000,
-        name: '',
-        id: '',
-        images: [],
-      },
-      {
-        album: {
-          album_type: 'album' as const,
-          total_tracks: 10,
-          available_markets: ['BR', 'CA'],
-          external_urls: {
-            spotify: 'https://open.spotify.com/album/2',
-          },
-          href: 'https://api.spotify.com/v1/albums/2',
-          id: '2',
-          images: [
-            {
-              url: 'https://i.scdn.co/image/ab67616d00001e022222',
-              height: 300,
-              width: 300,
-            },
-          ],
-          name: 'Back in Black',
-          release_date: '1980-07-25',
-          release_date_precision: 'day',
-          type: 'album',
-          uri: 'spotify:album:2',
-        },
-        artists: [
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/a2',
-            },
-            href: 'https://api.spotify.com/v1/artists/a2',
-            id: 'a2',
-            name: 'AC/DC',
-            type: 'artist',
-            uri: 'spotify:artist:a2',
-            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
-            genres: [],
-            popularity: 0,
-          },
-        ],
-        duration_ms: 210000,
-        name: '',
-        id: '',
-        images: [],
-      },
-      {
-        album: {
-          album_type: 'compilation' as const,
-          total_tracks: 9,
-          available_markets: ['BR', 'IT'],
-          external_urls: {
-            spotify: 'https://open.spotify.com/album/3',
-          },
-          href: 'https://api.spotify.com/v1/albums/3',
-          id: '3',
-          images: [
-            {
-              url: 'https://i.scdn.co/image/ab67616d00001e023333',
-              height: 300,
-              width: 300,
-            },
-          ],
-          name: 'Greatest Hits',
-          release_date: '1981-12',
-          release_date_precision: 'month',
-          type: 'album',
-          uri: 'spotify:album:3',
-        },
-        artists: [
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/a3',
-            },
-            href: 'https://api.spotify.com/v1/artists/a3',
-            id: 'a3',
-            name: 'Queen',
-            type: 'artist',
-            uri: 'spotify:artist:a3',
-            images: [{ url: 'urlDaImagemDoArtista1', width: 300, height: 300 }],
-            genres: [],
-            popularity: 0,
-          },
-        ],
-        duration_ms: 215000,
-        name: '',
-        id: '',
-        images: [],
       },
     ]
 
@@ -222,9 +131,9 @@ export class SpotifyProviderMock implements SpotifyProvider {
     if (acess_token !== 'acces_token') {
       return null
     }
-    const response = {
+    const response: SpotifyUserProfile = {
       display_name: 'jhon doe',
-      images: [{ url: 'imageurl' }],
+      images: [{ url: 'imageurl', height: 300, width: 300 }],
       email: 'jhondoe@example.com',
       id: 'spotify_id',
     }

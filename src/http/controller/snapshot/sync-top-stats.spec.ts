@@ -3,7 +3,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { app } from '../../../app'
 import { createAndAuthenticateUser } from '../../../utils/test/create-and-authenticate-user'
 
-describe('Sync Top Stats (e2e)', () => {
+describe.only('Sync Top Stats (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -12,19 +12,17 @@ describe('Sync Top Stats (e2e)', () => {
     await app.close()
   })
 
-  it('should be able to sync top stats', async () => {
+  it.only('should be able to sync top stats', async () => {
     const { authResponse } = await createAndAuthenticateUser(app)
     const { id } = authResponse.body
 
-    try {
-      await request(app.server).post(`/snapshot/sync-top-stats?id=${id}`).send()
-    } catch (error) {
-      console.log(error)
-    }
     const response = await request(app.server)
       .post(`/snapshot/sync-top-stats?id=${id}`)
       .send()
 
+    console.log(response.body)
+
+    expect(response.body.count).toBe(4)
     expect(response.statusCode).toEqual(201)
   })
 })

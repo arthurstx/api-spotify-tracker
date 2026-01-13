@@ -1,7 +1,8 @@
 import request from 'supertest'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { app } from '../../../app'
-import { createAndAuthenticateUser } from '../../../utils/test/create-and-authenticate-user'
+import { syncTopStatsAndAuth } from '../../../utils/test/sync-top-stats-and-auth'
+import { TimeRange } from '../../../../generated/prisma/enums'
 
 describe('Get Daily (e2e)', () => {
   beforeAll(async () => {
@@ -13,22 +14,22 @@ describe('Get Daily (e2e)', () => {
   })
 
   it('should be able to get daily snapshot', async () => {
-    const { authResponse } = await createAndAuthenticateUser(app)
-    const { spotify_id: spotifyId } = authResponse.body
+    const { authResponse } = await syncTopStatsAndAuth(app)
+    const { id } = authResponse.body
 
     const response = await request(app.server)
-      .get(`/snapshot/get-daily`)
-      .set('Authorization', `Bearer ${spotifyId}`)
-      .send()
+      .post(`/snapshot/get-daily?id=${id}`)
+      .send({
+        setSnapshotDate: new Date(),
+        timeRange: TimeRange.MEDIUM_TERM,
+      })
 
-    expect(response.statusCode).toEqual(200)
+    expect(response.statusCode).toEqual(201)
     expect(response.body).toEqual(
       expect.objectContaining({
-        snapshot: expect.objectContaining({
-          artists: expect.any(Array),
-          tracks: expect.any(Array),
-        }),
-      }),
+        artists: expect.any(Array),
+        tracks: expect.any(Array),
+      })
     )
   })
 })

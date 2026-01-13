@@ -17,7 +17,7 @@ describe('List Artists (e2e)', () => {
     const { spotify_id: spotifyId } = authResponse.body
 
     const response = await request(app.server)
-      .get(`/catolog/artists`)
+      .get(`/catalog/list-artists`)
       .set('Authorization', `Bearer ${spotifyId}`)
       .send()
 

@@ -5,6 +5,7 @@ import {
   ArtistRankingsProps,
   ArtistRankingsRepository,
 } from '../artist-rankings-repository'
+import { BatchPayload } from '../../../generated/prisma/internal/prismaNamespace'
 export class InMemoryArtistRankingRepository
   implements ArtistRankingsRepository
 {
@@ -20,9 +21,7 @@ export class InMemoryArtistRankingRepository
 
     return ArtistRanking
   }
-  async createMany(
-    data: ArtistRankingUncheckedCreateInput[]
-  ): Promise<ArtistRanking[]> {
+  async createMany(data: ArtistRankingUncheckedCreateInput[]) {
     const artistRankings = data.map((item) => ({
       id: item.id ? item.id : randomUUID(),
       artistId: item.artistId,
@@ -31,6 +30,11 @@ export class InMemoryArtistRankingRepository
       timeRange: item.timeRange,
     }))
     this.items.push(...artistRankings)
-    return artistRankings
+
+    const batchPayload: { count: number } = {
+      count: artistRankings.length,
+    }
+
+    return batchPayload as unknown as BatchPayload
   }
 }

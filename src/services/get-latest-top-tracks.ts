@@ -45,7 +45,7 @@ export class GetLatestTopTracksUseCase {
       throw new SnapshotNotFoundError()
     }
 
-    const { track } = await this.trackRankingRead.fetchDailyArtistsWithRankings(
+    const { track } = await this.trackRankingRead.fetchDailyTracksWithRankings(
       snapshot.id,
       timeRange
     )
