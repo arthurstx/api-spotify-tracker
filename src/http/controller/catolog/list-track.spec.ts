@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { app } from '../../../app'
-import { createAndAuthenticateUser } from '../../../utils/test/create-and-authenticate-user'
+import { syncTopStatsAndAuth } from '../../../utils/test/sync-top-stats-and-auth'
 
 describe('List Tracks (e2e)', () => {
   beforeAll(async () => {
@@ -13,15 +13,14 @@ describe('List Tracks (e2e)', () => {
   })
 
   it('should be able to list tracks', async () => {
-    const { authResponse } = await createAndAuthenticateUser(app)
-    const { spotify_id: spotifyId } = authResponse.body
+    const { authResponse } = await syncTopStatsAndAuth(app)
+    const { id } = authResponse.body
 
     const response = await request(app.server)
-      .get(`/catolog/tracks`)
-      .set('Authorization', `Bearer ${spotifyId}`)
+      .get(`/catalog/tracks?id=${id}`)
       .send()
 
     expect(response.statusCode).toEqual(200)
-    expect(response.body.tracks).toHaveLength(10)
+    expect(response.body.tracks).toHaveLength(1)
   })
 })

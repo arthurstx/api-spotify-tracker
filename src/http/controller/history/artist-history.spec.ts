@@ -23,16 +23,23 @@ describe('Artist History (e2e)', () => {
       .post(`/history/artist-history?id=${id}`)
       .send({ artistId: artistId })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        artist: expect.objectContaining({
-          name: expect.any(String),
-          genres: expect.any(Array),
-          imageUrl: expect.any(String),
-        }),
-        history: expect.any(Array),
-      })
-    )
+    expect(response.statusCode).toBe(200)
+
+    expect(response.body).toMatchObject({
+      artist: {
+        id: expect.any(String),
+        name: expect.any(String),
+        imageUrl: expect.any(String),
+        spotifyId: expect.any(String),
+        createdAt: expect.any(String),
+      },
+      history: expect.arrayContaining([
+        {
+          position: expect.any(Number),
+          timeRange: expect.any(String),
+          date: expect.any(String),
+        },
+      ]),
+    })
   })
 })

@@ -23,7 +23,7 @@ describe('Get Latest Tracks (e2e)', () => {
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual(
       expect.objectContaining({
-        tracks: expect.any(Array),
+        track: expect.any(Array),
       })
     )
   })
