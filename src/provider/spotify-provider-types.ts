@@ -77,7 +77,16 @@ export interface SpotifyTrack {
   duration_ms: number
 }
 
+export interface RecentlyPlayedSpotifyTrack {
+  track: SpotifyTrack
+
+  played_at: string
+}
+
 export interface SpotifyProvider {
+  getRecentlyPlayedTracks(
+    access_token: string
+  ): Promise<RecentlyPlayedSpotifyTrack[]>
   getTopTracks(access_token: string): Promise<SpotifyTrack[]>
   getTopArtists(access_token: string): Promise<SpotifyArtist[]>
   getTokensByCode(

@@ -1,20 +1,19 @@
 import {
+  RecentlyPlayedSpotifyTrack,
   SpotifyArtist,
   SpotifyProvider,
-  SpotifyTrack,
 } from '../provider/spotify-provider-types'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { TracksRepository } from '../repository/tracks-repository'
-import { TrackRankingsRepository } from '../repository/track-rankings-repository'
-import { ArtistRankingsRepository } from '../repository/artist-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
-import { Artist, TimeRange, Track } from '../../generated/prisma/browser'
+import { PlayHistory, Track } from '../../generated/prisma/browser'
 import { UserNotFoundError } from './errors/user-not-found-error'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 import { TrackArtistsRepository } from '../repository/track-artists-repository'
 import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
+import { PlayHistoryRepository } from '../repository/Play-history-repository'
 
 interface SyncTopStatsUseCaseRequest {
   userId: string
@@ -24,7 +23,7 @@ interface SyncTopStatsUseCaseResponse {
   count: number
 }
 
-function mapExternalArtistToArtist(rawArtist: SpotifyArtist) {
+function mapExternalTrackToArtist(rawArtist: SpotifyArtist) {
   const image = rawArtist.images?.[0]?.url ?? null
   return {
     name: rawArtist.name,
@@ -33,16 +32,24 @@ function mapExternalArtistToArtist(rawArtist: SpotifyArtist) {
   }
 }
 
-function mapExternalTrackToTrack(rawTrack: SpotifyTrack) {
-  const image = rawTrack.images?.[0]?.url ?? null
+function mapExternalRecentlyPlayedTrackToPlayHistory(
+  rawTrack: RecentlyPlayedSpotifyTrack
+) {
   return {
-    name: rawTrack.name,
+    trackId: rawTrack.track.id,
+    playedAt: new Date(rawTrack.played_at),
+  } as PlayHistory
+}
+function mapExternalTrackToTrack(rawTrack: RecentlyPlayedSpotifyTrack) {
+  const image = rawTrack.track.images?.[0]?.url ?? null
+  return {
+    name: rawTrack.track.name,
     imageUrl: image,
-    spotifyId: rawTrack.id,
-    durationMs: rawTrack.duration_ms,
+    spotifyId: rawTrack.track.id,
+    durationMs: rawTrack.track.duration_ms,
   } as Track
 }
-
+/*
 function mapExternalArtisToArtistRanking(
   rawArtist: Artist,
   index: number,
@@ -68,17 +75,16 @@ function mapExternalTracksToTrackstRanking(
     timeRange: 'MEDIUM_TERM' as TimeRange,
   }
 }
-
+*/
 export class SyncTopStatsUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private trackArtistsRepository: TrackArtistsRepository,
     private artistsRepository: ArtistsRepository,
-    private artistRankingsRepository: ArtistRankingsRepository,
     private tracksRepository: TracksRepository,
-    private trackRankingsRepository: TrackRankingsRepository,
     private snapShotRepository: SnapShotsRepository,
-    private spotifyProvider: SpotifyProvider
+    private spotifyProvider: SpotifyProvider,
+    private playHistoryRepository: PlayHistoryRepository
   ) {}
 
   async execute({
@@ -111,49 +117,49 @@ export class SyncTopStatsUseCase {
       throw new SyncAlreadyDoneError()
     }
 
-    const topArtistsResponse = await this.spotifyProvider.getTopArtists(
-      user.accessToken
+    const recentlyPlayedTracksResponse =
+      await this.spotifyProvider.getRecentlyPlayedTracks(user.accessToken)
+
+    const artistsWhitoutFormated = recentlyPlayedTracksResponse.flatMap(
+      (track) => track.track.artists
     )
 
-    const topTracksResponse = await this.spotifyProvider.getTopTracks(
-      user.accessToken
+    const normalizeTrack = recentlyPlayedTracksResponse.map(
+      mapExternalTrackToTrack
     )
 
-    const NormalizeArtist = topArtistsResponse.map(mapExternalArtistToArtist)
-    const NormalizeTrack = topTracksResponse.map(mapExternalTrackToTrack)
+    const normalizeArtists = artistsWhitoutFormated.map(
+      mapExternalTrackToArtist
+    )
 
-    const snapShot = await this.snapShotRepository.create({
+    await this.snapShotRepository.create({
       userId,
       date: new Date(),
     })
 
-    const artists = await this.artistsRepository.upsertMany(NormalizeArtist)
-    const tracks = await this.tracksRepository.upsertMany(NormalizeTrack)
+    await this.artistsRepository.upsertMany(normalizeArtists)
+    await this.tracksRepository.upsertMany(normalizeTrack)
 
-    const artistRanking = artists.map((item, index) =>
-      mapExternalArtisToArtistRanking(item, index, snapShot.id)
+    const playHistory = recentlyPlayedTracksResponse.map(
+      mapExternalRecentlyPlayedTrackToPlayHistory
     )
 
-    const tracksRanking = tracks.map((item, index) =>
-      mapExternalTracksToTrackstRanking(item, index, snapShot.id)
-    )
-
-    const countArtist = (await this.artistRankingsRepository.createMany(
-      artistRanking
-    )) as BatchPayload
-    const countTracks = (await this.trackRankingsRepository.createMany(
-      tracksRanking
+    const countPlayHistory = (await this.playHistoryRepository.createMany(
+      userId,
+      playHistory
     )) as BatchPayload
 
-    const trackAndArtistSpotifyIds = topTracksResponse.map((track) => {
-      return {
-        trackId: track.id,
-        artistId: track.artists.map((artist) => artist.id),
+    const trackAndArtistSpotifyIds = recentlyPlayedTracksResponse.map(
+      (track) => {
+        return {
+          trackId: track.track.id,
+          artistId: track.track.artists.map((artist) => artist.id),
+        }
       }
-    })
+    )
 
     await this.trackArtistsRepository.create(trackAndArtistSpotifyIds)
-    const count = countArtist.count + countTracks.count
+    const count = countPlayHistory.count
     return { count }
   }
 }
