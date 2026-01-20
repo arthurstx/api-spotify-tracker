@@ -5,9 +5,15 @@ import {
   type SpotifyArtist,
   SpotifyTrack,
   SpotifyUserProfile,
+  RecentlyPlayedSpotifyTrack,
 } from '../spotify-provider-types'
 
 export class SpotifyProviderMock implements SpotifyProvider {
+  getRecentlyPlayedTracks(
+    access_token: string,
+  ): Promise<RecentlyPlayedSpotifyTrack[]> {
+    throw new Error('Method not implemented.')
+  }
   async getTopTracks() {
     const spotifyAlbumsMock: SpotifyTrack[] = [
       {

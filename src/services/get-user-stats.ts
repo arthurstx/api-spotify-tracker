@@ -2,7 +2,6 @@ import { ArtistReadRepository } from '../repository/artists-repository'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
-import { SnapshotNotFoundError } from './errors/snapshot-not-found-error'
 import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetUserStatsUseCaseRequest {
@@ -25,7 +24,7 @@ export class GetUserStatsUseCase {
     private snapshotRepository: SnapShotsRepository,
     private tracksReadRepository: TrackReadRepository,
     private artistsReadRepository: ArtistReadRepository,
-    private userRepository: UsersRepository
+    private userRepository: UsersRepository,
   ) {}
 
   async execute({

@@ -1,7 +1,7 @@
 services:
-  api-gym:
+  postgresql:
     image: bitnami/postgresql
-    container_name: api-spotify-tracker
+    container_name: api-spotify-postgresql
     ports:
       - '5432:5432'
     environment:
@@ -16,10 +16,25 @@ services:
     networks:
       - default
 
+  redis:
+    image: bitnami/redis:latest
+    container_name: api-spotify-redis
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/bitnami/redis/data
+    restart: 'no'
+    networks:
+      - default
+
 volumes:
   preinitdb:
     external: false
   data:
     external: false
   initdb:
+    external: false
+  redis_data:
     external: false

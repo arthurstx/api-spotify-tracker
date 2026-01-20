@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {
+  RecentlyPlayedSpotifyTrack,
   SpotifyProvider,
   SpotifyProviderAuthenticationResponse,
   SpotifyTrack,
@@ -15,6 +16,25 @@ interface tokenResponse {
 }
 
 export class SpotifyHttpProvider implements SpotifyProvider {
+  async getRecentlyPlayedTracks(
+    access_token: string,
+  ): Promise<RecentlyPlayedSpotifyTrack[]> {
+    const response = await axios.get(
+      'https://api.spotify.com/v1/me/player/recently-played',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          limit: 50,
+        },
+      },
+    )
+
+    const data = response.data.items
+
+    return data
+  }
   async getTokensByCode(code: string, state: string) {
     if (!code || !state) {
       return null
@@ -34,10 +54,10 @@ export class SpotifyHttpProvider implements SpotifyProvider {
           Authorization:
             'Basic ' +
             Buffer.from(
-              `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+              `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
             ).toString('base64'),
         },
-      }
+      },
     )
 
     const data = response.data as tokenResponse
@@ -72,7 +92,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
           limit: 50,
           time_range: TimeRange.SHORT_TERM,
         },
-      }
+      },
     )
 
     const data = response.data.items
@@ -91,7 +111,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
           limit: 50,
           time_range: TimeRange.SHORT_TERM,
         },
-      }
+      },
     )
 
     const data = response.data.items
@@ -113,10 +133,10 @@ export class SpotifyHttpProvider implements SpotifyProvider {
           Authorization:
             'Basic ' +
             Buffer.from(
-              `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+              `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
             ).toString('base64'),
         },
-      }
+      },
     )
     const data = response.data
 
