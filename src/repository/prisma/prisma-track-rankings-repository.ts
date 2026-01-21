@@ -30,15 +30,27 @@ export class PrismaTrackRankingsRepository
   }
 
   async createMany(data: TrackRankingUncheckedCreateInput[]) {
-    const count = prisma.trackRanking.createMany({
-      data,
+    let count = 0
+    data.map(async (d) => {
+      const track = await prisma.track.findFirst({
+        where: { spotifyId: d.trackId },
+      })
+      if (!track) {
+        return
+      }
+      await prisma.trackRanking.create({
+        data: {
+          ...d,
+          trackId: track.id,
+        },
+      })
+      count++
     })
-    return count
+    return { count }
   }
-
   async fetchDailyTracksWithRankings(
     snapshotId: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<FormatedTracks> {
     const unformattedTrackRanking = await prisma.trackRanking.findMany({
       where: {

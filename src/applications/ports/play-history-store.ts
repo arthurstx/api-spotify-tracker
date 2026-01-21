@@ -2,11 +2,33 @@
 export interface RegisterPlayParams {
   userId: string
   playsHistory: Array<{
-    trackId: string
-    artistIds: string[]
+    track: {
+      name: string
+      imageUrl: string
+      spotifyId: string
+      durationMs: number
+    }
+    artists: {
+      name: string
+      imageUrl: string
+      spotifyId: string
+    }[]
     playedAt: Date
   }>
 }
 export interface PlayHistoryStore {
   registerPlay({ userId, playsHistory }: RegisterPlayParams): Promise<number>
+  getArtistsRanking(
+    userId: string,
+  ): Promise<Array<{ name: string; imageUrl: string; spotifyId: string }>>
+  getTracksRanking(
+    userId: string,
+  ): Promise<
+    Array<{
+      name: string
+      imageUrl: string
+      spotifyId: string
+      durationMs: number
+    }>
+  >
 }

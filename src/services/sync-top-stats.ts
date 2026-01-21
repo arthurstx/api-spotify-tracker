@@ -3,11 +3,8 @@ import {
   SpotifyArtist,
   SpotifyProvider,
 } from '../provider/spotify-provider-types'
-import { ArtistsRepository } from '../repository/artists-repository'
-import { TracksRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
-import { Track } from '../../generated/prisma/browser'
 import { UserNotFoundError } from './errors/user-not-found-error'
 import { TrackArtistsRepository } from '../repository/track-artists-repository'
 import { PlayHistoryStore } from '../applications/ports/play-history-store'
@@ -20,67 +17,31 @@ interface SyncTopStatsUseCaseResponse {
   count: number
 }
 
-function mapExternalTrackToArtist(rawArtist: SpotifyArtist) {
-  const image = rawArtist.images?.[0]?.url ?? null
+function mapExternalTrackToPlayHistory(rawTrack: RecentlyPlayedSpotifyTrack) {
+  const trackImage = rawTrack.track.images?.[0]?.url ?? null
   return {
-    name: rawArtist.name,
-    imageUrl: image,
-    spotifyId: rawArtist.id,
-  }
-}
-
-function mapExternalRecentlyPlayedTrackToPlayHistory(
-  rawTrack: RecentlyPlayedSpotifyTrack,
-) {
-  return {
-    trackId: rawTrack.track.id,
+    track: {
+      name: rawTrack.track.name,
+      imageUrl: trackImage,
+      spotifyId: rawTrack.track.id,
+      durationMs: rawTrack.track.duration_ms,
+    },
+    artists: rawTrack.track.artists.map((artist: SpotifyArtist) => {
+      const artistImage = artist.images?.[0]?.url ?? null
+      return {
+        name: artist.name,
+        imageUrl: artistImage,
+        spotifyId: artist.id,
+      }
+    }),
     playedAt: new Date(rawTrack.played_at),
-    artistIds: rawTrack.track.artists.map((artist) => artist.id),
   }
 }
 
-function mapExternalTrackToTrack(rawTrack: RecentlyPlayedSpotifyTrack) {
-  const image = rawTrack.track.images?.[0]?.url ?? null
-  return {
-    name: rawTrack.track.name,
-    imageUrl: image,
-    spotifyId: rawTrack.track.id,
-    durationMs: rawTrack.track.duration_ms,
-  } as Track
-}
-/*
-function mapExternalArtisToArtistRanking(
-  rawArtist: Artist,
-  index: number,
-  snapshotId: string
-) {
-  return {
-    snapshotId: snapshotId,
-    artistId: rawArtist.id,
-    position: index + 1,
-    timeRange: 'MEDIUM_TERM' as TimeRange,
-  }
-}
-
-function mapExternalTracksToTrackstRanking(
-  rawTrack: Track,
-  index: number,
-  snapshotId: string
-) {
-  return {
-    snapshotId: snapshotId,
-    trackId: rawTrack.id,
-    position: index + 1,
-    timeRange: 'MEDIUM_TERM' as TimeRange,
-  }
-}
-*/
 export class SyncTopStatsUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private trackArtistsRepository: TrackArtistsRepository,
-    private artistsRepository: ArtistsRepository,
-    private tracksRepository: TracksRepository,
     private spotifyProvider: SpotifyProvider,
     private playHistoryCache: PlayHistoryStore,
   ) {}
@@ -110,6 +71,11 @@ export class SyncTopStatsUseCase {
     const recentlyPlayedTracksResponse =
       await this.spotifyProvider.getRecentlyPlayedTracks(user.accessToken)
 
+    const playsHistory = recentlyPlayedTracksResponse.map(
+      mapExternalTrackToPlayHistory,
+    )
+
+    /*
     const artistsWhitoutFormated = recentlyPlayedTracksResponse.flatMap(
       (track) => track.track.artists,
     )
@@ -122,14 +88,11 @@ export class SyncTopStatsUseCase {
       mapExternalTrackToArtist,
     )
 
-    await this.artistsRepository.upsertMany(normalizeArtists)
-    await this.tracksRepository.upsertMany(normalizeTrack)
-
     const playsHistory = recentlyPlayedTracksResponse.map(
       mapExternalRecentlyPlayedTrackToPlayHistory,
     )
-
-    const countPlayHistory = await this.playHistoryCache.registerPlay({
+*/
+    await this.playHistoryCache.registerPlay({
       userId,
       playsHistory,
     })
@@ -144,7 +107,7 @@ export class SyncTopStatsUseCase {
     )
 
     await this.trackArtistsRepository.create(trackAndArtistSpotifyIds)
-    const count = countPlayHistory
+    const count = recentlyPlayedTracksResponse.length
     return { count }
   }
 }

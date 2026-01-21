@@ -1,43 +1,32 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `genres` on the `Artist` table. All the data in the column will be lost.
-  - You are about to drop the column `expiresAt` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the `DailyRanking` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `displayName` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `tokenExpiresAt` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updatedAt` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "TimeRange" AS ENUM ('SHORT_TERM', 'MEDIUM_TERM', 'LONG_TERM');
 
--- DropForeignKey
-ALTER TABLE "DailyRanking" DROP CONSTRAINT "DailyRanking_artistId_fkey";
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "spotifyId" TEXT NOT NULL,
+    "displayName" TEXT NOT NULL,
+    "email" TEXT,
+    "imageUrl" TEXT,
+    "accessToken" TEXT NOT NULL,
+    "refreshToken" TEXT NOT NULL,
+    "tokenExpiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- DropForeignKey
-ALTER TABLE "DailyRanking" DROP CONSTRAINT "DailyRanking_userId_fkey";
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
--- DropIndex
-DROP INDEX "User_email_key";
+-- CreateTable
+CREATE TABLE "Artist" (
+    "id" TEXT NOT NULL,
+    "spotifyId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "imageUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- AlterTable
-ALTER TABLE "Artist" DROP COLUMN "genres",
-ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
-
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "expiresAt",
-DROP COLUMN "name",
-ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "displayName" TEXT NOT NULL,
-ADD COLUMN     "imageUrl" TEXT,
-ADD COLUMN     "tokenExpiresAt" TIMESTAMP(3) NOT NULL,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL,
-ALTER COLUMN "email" DROP NOT NULL;
-
--- DropTable
-DROP TABLE "DailyRanking";
+    CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Track" (
@@ -90,6 +79,12 @@ CREATE TABLE "TrackRanking" (
 
     CONSTRAINT "TrackRanking_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_spotifyId_key" ON "User"("spotifyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Artist_spotifyId_key" ON "Artist"("spotifyId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Track_spotifyId_key" ON "Track"("spotifyId");

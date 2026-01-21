@@ -16,7 +16,7 @@ interface AuthenticateUserUseCaseResponse {
 export class AuthenticateUserUseCase {
   constructor(
     private userRepository: UsersRepository,
-    private spotifyProvider: SpotifyProvider
+    private spotifyProvider: SpotifyProvider,
   ) {}
 
   async execute({
@@ -25,7 +25,7 @@ export class AuthenticateUserUseCase {
   }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
     const spotifyTokens = await this.spotifyProvider.getTokensByCode(
       code,
-      state
+      state,
     )
 
     if (!spotifyTokens) {
@@ -34,9 +34,8 @@ export class AuthenticateUserUseCase {
 
     const { accessToken, expires_in, refreshToken } = spotifyTokens
 
-    const unformattedSpotifyPorfile = await this.spotifyProvider.getMe(
-      accessToken
-    )
+    const unformattedSpotifyPorfile =
+      await this.spotifyProvider.getMe(accessToken)
 
     if (!unformattedSpotifyPorfile) {
       throw new GetProfileError()
