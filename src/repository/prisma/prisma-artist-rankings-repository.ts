@@ -44,7 +44,7 @@ export class PrismaArtistsRankingsRepository
 
   async fetchDailyArtistsWithRankings(
     snapshotId: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<FormatedArtists> {
     const unformattedArtistRanking = await prisma.artistRanking.findMany({
       where: {
@@ -90,8 +90,21 @@ export class PrismaArtistsRankingsRepository
   }
 
   async createMany(data: ArtistRankingUncheckedCreateInput[]) {
-    const count = await prisma.artistRanking.createMany({
-      data,
+    let count = 0
+    data.map(async (d) => {
+      const artist = await prisma.artist.findFirst({
+        where: { spotifyId: d.artistId },
+      })
+      if (!artist) {
+        return
+      }
+      await prisma.artistRanking.create({
+        data: {
+          ...d,
+          artistId: artist.id,
+        },
+      })
+      count++
     })
     return count
   }

@@ -9,7 +9,7 @@ export class RedisPlayHistoryStore implements PlayHistoryStore {
     const data = await redis.zRangeWithScores(
       `artist:ranking:user:${userId}`,
       0,
-      -1, // top 30
+      -1, // top 50
     )
     const artists = await Promise.all(
       data.map(async (d) => {
@@ -23,7 +23,6 @@ export class RedisPlayHistoryStore implements PlayHistoryStore {
         }
       }),
     )
-    console.log(artists)
 
     return artists
   }
@@ -32,7 +31,7 @@ export class RedisPlayHistoryStore implements PlayHistoryStore {
     const data = await redis.zRangeWithScores(
       `track:ranking:user:${userId}`,
       0,
-      -1, // top 30
+      -1, // top 50
     )
 
     const tracks = await Promise.all(
@@ -68,6 +67,7 @@ export class RedisPlayHistoryStore implements PlayHistoryStore {
 
       const pipeline = redis.multi()
 
+      // track
       const trackDataKey = `track:data:${track.spotifyId}`
       const trackRankingKey = `track:ranking:user:${userId}`
 
@@ -80,6 +80,7 @@ export class RedisPlayHistoryStore implements PlayHistoryStore {
       pipeline.zIncrBy(trackRankingKey, 1, track.spotifyId)
       countTracks++
 
+      // artists
       const artistRankingKey = `artist:ranking:user:${userId}`
 
       for (const artist of artists) {

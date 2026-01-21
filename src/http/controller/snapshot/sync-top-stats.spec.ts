@@ -20,8 +20,6 @@ describe.only('Sync Top Stats (e2e)', () => {
       .post(`/snapshot/sync-top-stats?id=${id}`)
       .send()
 
-    console.log(response.body)
-
     expect(response.body.count).toBe(4)
     expect(response.statusCode).toEqual(201)
   })

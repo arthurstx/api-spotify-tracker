@@ -46,7 +46,7 @@ export class PrismaTrackRankingsRepository
       })
       count++
     })
-    return { count }
+    return count
   }
   async fetchDailyTracksWithRankings(
     snapshotId: string,

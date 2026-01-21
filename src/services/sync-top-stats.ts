@@ -75,23 +75,6 @@ export class SyncTopStatsUseCase {
       mapExternalTrackToPlayHistory,
     )
 
-    /*
-    const artistsWhitoutFormated = recentlyPlayedTracksResponse.flatMap(
-      (track) => track.track.artists,
-    )
-
-    const normalizeTrack = recentlyPlayedTracksResponse.map(
-      mapExternalTrackToTrack,
-    )
-
-    const normalizeArtists = artistsWhitoutFormated.map(
-      mapExternalTrackToArtist,
-    )
-
-    const playsHistory = recentlyPlayedTracksResponse.map(
-      mapExternalRecentlyPlayedTrackToPlayHistory,
-    )
-*/
     await this.playHistoryCache.registerPlay({
       userId,
       playsHistory,

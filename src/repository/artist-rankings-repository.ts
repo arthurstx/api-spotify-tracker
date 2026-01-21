@@ -3,7 +3,6 @@ import {
   Prisma,
   TimeRange,
 } from '../../generated/prisma/browser'
-import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
 
 export interface ArtistRankingsProps {
   artistId: string
@@ -14,8 +13,8 @@ export interface ArtistRankingsProps {
 export interface ArtistRankingsRepository {
   fetchManyArtistRankings(props: ArtistRankingsProps): Promise<ArtistRanking[]>
   createMany(
-    data: Prisma.ArtistRankingUncheckedCreateInput[]
-  ): Promise<ArtistRanking[] | BatchPayload>
+    data: Prisma.ArtistRankingUncheckedCreateInput[],
+  ): Promise<ArtistRanking[] | number>
 }
 
 // with joins
@@ -39,11 +38,11 @@ export interface ArtistRankingsReadRepository {
   fetchHistory(
     userId: string,
     artistId: string,
-    timeRange?: TimeRange
+    timeRange?: TimeRange,
   ): Promise<history[]>
 
   fetchDailyArtistsWithRankings(
     snapshotId: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<FormatedArtists>
 }

@@ -1,5 +1,4 @@
 import { Prisma, TimeRange, TrackRanking } from '../../generated/prisma/browser'
-import { BatchPayload } from '../../generated/prisma/internal/prismaNamespace'
 
 export interface TrackRankingsProps {
   trackId: string
@@ -10,8 +9,8 @@ export interface TrackRankingsProps {
 export interface TrackRankingsRepository {
   fetchManyTrackRankings(props: TrackRankingsProps): Promise<TrackRanking[]>
   createMany(
-    data: Prisma.TrackRankingUncheckedCreateInput[]
-  ): Promise<TrackRanking[] | BatchPayload>
+    data: Prisma.TrackRankingUncheckedCreateInput[],
+  ): Promise<TrackRanking[] | number>
 }
 
 // with joins
@@ -34,11 +33,11 @@ export interface FormatedTracks {
 export interface TrackRankingReadRepository {
   fetchDailyTracksWithRankings(
     snapshotId: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<FormatedTracks>
   fetchHistory(
     userId: string,
     trackId: string,
-    timeRange?: TimeRange
+    timeRange?: TimeRange,
   ): Promise<history[]>
 }
