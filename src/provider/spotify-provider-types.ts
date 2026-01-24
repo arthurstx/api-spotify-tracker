@@ -1,3 +1,5 @@
+import { TimeRange } from '../../generated/prisma/enums'
+
 export interface SpotifyProviderAuthenticationResponse {
   accessToken: string
   refreshToken: string
@@ -85,16 +87,22 @@ export interface RecentlyPlayedSpotifyTrack {
 
 export interface SpotifyProvider {
   getRecentlyPlayedTracks(
-    access_token: string
+    access_token: string,
   ): Promise<RecentlyPlayedSpotifyTrack[]>
-  getTopTracks(access_token: string): Promise<SpotifyTrack[]>
-  getTopArtists(access_token: string): Promise<SpotifyArtist[]>
+  getTopTracks(
+    access_token: string,
+    timeRange: TimeRange,
+  ): Promise<SpotifyTrack[]>
+  getTopArtists(
+    access_token: string,
+    timeRange: TimeRange,
+  ): Promise<SpotifyArtist[]>
   getTokensByCode(
     code: string,
-    state?: string
+    state?: string,
   ): Promise<SpotifyProviderAuthenticationResponse | null>
   getMe(acess_token: string): Promise<SpotifyUserProfile | null>
   refreshAcessToken(
-    refreshToken: string
+    refreshToken: string,
   ): Promise<SpotifyProviderRefreshTokenResponse | null>
 }

@@ -3,7 +3,6 @@ import {
   RecentlyPlayedSpotifyTrack,
   SpotifyProvider,
   SpotifyProviderAuthenticationResponse,
-  SpotifyTrack,
 } from '../../../provider/spotify-provider-types'
 import { TimeRange } from '../../../../generated/prisma/enums'
 
@@ -81,7 +80,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
     return data
   }
 
-  async getTopTracks(access_token: string): Promise<SpotifyTrack[]> {
+  async getTopTracks(access_token: string, timeRange: TimeRange) {
     const response = await axios.get(
       'https://api.spotify.com/v1/me/top/tracks',
       {
@@ -90,7 +89,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
         },
         params: {
           limit: 50,
-          time_range: TimeRange.SHORT_TERM,
+          time_range: timeRange,
         },
       },
     )
@@ -100,7 +99,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
     return data
   }
 
-  async getTopArtists(access_token: string) {
+  async getTopArtists(access_token: string, timeRange: TimeRange) {
     const response = await axios.get(
       'https://api.spotify.com/v1/me/top/artists',
       {
@@ -109,7 +108,7 @@ export class SpotifyHttpProvider implements SpotifyProvider {
         },
         params: {
           limit: 50,
-          time_range: TimeRange.SHORT_TERM,
+          time_range: timeRange,
         },
       },
     )
