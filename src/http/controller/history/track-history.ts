@@ -3,26 +3,22 @@ import z from 'zod'
 import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
 import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
-import { TimeRange } from '../../../../generated/prisma/enums'
 import { makeGetTrackHistoryUseCase } from '../../../services/factories/make-get-track-history-use-case'
 import { TrackNotFoundError } from '../../../services/errors/track-not-found-error'
+import {
+  trackHistoryBodySchema,
+  trackHistoryQuerySchema,
+} from './schema/track-history.schema'
 
 export async function trackHistory(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const geTrackHistoryQuerySchema = z.object({
-    id: z.uuid(),
-  })
+  const { id } = request.query as z.infer<typeof trackHistoryQuerySchema>
 
-  const geTrackHistoryBodySchema = z.object({
-    trackId: z.string(),
-    timeRange: z.enum(TimeRange).optional(),
-  })
-
-  const { id } = geTrackHistoryQuerySchema.parse(request.query)
-
-  const { trackId, timeRange } = geTrackHistoryBodySchema.parse(request.body)
+  const { trackId, timeRange } = request.body as z.infer<
+    typeof trackHistoryBodySchema
+  >
 
   const GetLatestTopArtistUseCase = makeGetTrackHistoryUseCase()
 

@@ -4,17 +4,15 @@ import { AuthenticationError } from '../../../services/errors/authentication-Err
 import { GetProfileError } from '../../../services/errors/get-profile-error'
 import { AxiosError } from 'axios'
 import { makeAuthenticateUseCase } from '../../../services/factories/make-authenticate-use-case'
+import { authenticateQuerySchema } from './schemas/authenticate.schema'
 
 export async function authenticate(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const authenticateQuerySchema = z.object({
-    code: z.string().min(1),
-    state: z.string(),
-  })
-
-  const { code, state } = authenticateQuerySchema.parse(request.query)
+  const { code, state } = request.query as z.infer<
+    typeof authenticateQuerySchema
+  >
 
   const authenticateUseCase = makeAuthenticateUseCase()
 

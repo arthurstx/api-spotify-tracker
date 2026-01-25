@@ -2,18 +2,15 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
 import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
 import { makeListTrackedTrackUseCase } from '../../../services/factories/make-list-tracked-track-use-case'
+import { listTrackQuerySchema } from './schema/list-track.schema'
 
 export async function listTrack(request: FastifyRequest, reply: FastifyReply) {
-  const listTrackQuerySchema = z.object({
-    id: z.uuid(),
-  })
+  const { id } = request.query as z.infer<typeof listTrackQuerySchema>
 
-  const { id } = listTrackQuerySchema.parse(request.query)
-
-  const ListTrackedTracksUseCase = makeListTrackedTrackUseCase()
+  const listTrackedTracksUseCase = makeListTrackedTrackUseCase()
 
   try {
-    const { tracks } = await ListTrackedTracksUseCase.execute({
+    const { tracks } = await listTrackedTracksUseCase.execute({
       userId: id,
     })
     reply.status(200).send({ tracks })

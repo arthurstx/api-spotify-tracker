@@ -3,34 +3,31 @@ import z from 'zod'
 import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
 import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
-import { TimeRange } from '../../../../generated/prisma/enums'
 import { makeGetLatestTopArtistsUseCase } from '../../../services/factories/make-get-latest-top-artists-use-case'
 import { SnapshotNotFoundError } from '../../../services/errors/snapshot-not-found-error'
+import {
+  getLatestArtistsBodySchema,
+  getLatestArtistsQuerySchema,
+} from './schema/get-latest-artists.schema'
 
 export async function getLatestArtists(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const getLatestArtistsQuerySchema = z.object({
-    id: z.uuid(),
-  })
+  const { id } = request.query as z.infer<typeof getLatestArtistsQuerySchema>
 
-  const getLatestArtistsBodySchema = z.object({
-    timeRange: z.enum(TimeRange).optional(),
-  })
-
-  const { id } = getLatestArtistsQuerySchema.parse(request.query)
-
-  const { timeRange } = getLatestArtistsBodySchema.parse(request.body)
+  const { timeRange } = request.body as z.infer<
+    typeof getLatestArtistsBodySchema
+  >
 
   const GetLatestTopArtistUseCase = makeGetLatestTopArtistsUseCase()
 
   try {
     const { artist, snapshotDate } = await GetLatestTopArtistUseCase.execute({
       userId: id,
-      timeRange, // TODO : fix me
+      timeRange,
     })
-    reply.status(200).send({ artist, snapshotDate })
+    reply.status(200).send({ artists: artist, snapshotDate })
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return reply.status(400).send({ message: err.message })

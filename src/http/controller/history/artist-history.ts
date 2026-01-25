@@ -3,26 +3,22 @@ import z from 'zod'
 import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
 import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
-import { TimeRange } from '../../../../generated/prisma/enums'
 import { makeGetArtistHistoryUseCase } from '../../../services/factories/make-get-artist-history'
 import { ArtistNotFoundError } from '../../../services/errors/artist-not-found-error'
+import {
+  artistHistoryBodySchema,
+  artistHistoryQuerySchema,
+} from './schema/artist-history.schema'
 
 export async function artistHistory(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const getArtistHistoryQuerySchema = z.object({
-    id: z.uuid(),
-  })
+  const { id } = request.query as z.infer<typeof artistHistoryQuerySchema>
 
-  const getArtistHistoryBodySchema = z.object({
-    artistId: z.string(),
-    timeRange: z.enum(TimeRange).optional(),
-  })
-
-  const { id } = getArtistHistoryQuerySchema.parse(request.query)
-
-  const { artistId, timeRange } = getArtistHistoryBodySchema.parse(request.body)
+  const { artistId, timeRange } = request.body as z.infer<
+    typeof artistHistoryBodySchema
+  >
 
   const GetArtistHistoryUseCase = makeGetArtistHistoryUseCase()
 

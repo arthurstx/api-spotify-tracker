@@ -5,16 +5,13 @@ import { RefreshTokenExpiredError } from '../../../services/errors/refresh-token
 import { AxiosError } from 'axios'
 import { makeSyncTopStatsUseCase } from '../../../services/factories/make-sync-top-stats'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
+import { syncTopStatsQuerySchema } from './schema/sync-top-stats.schema'
 
 export async function syncTopStats(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const authenticateQuerySchema = z.object({
-    id: z.uuid(),
-  })
-
-  const { id } = authenticateQuerySchema.parse(request.query)
+  const { id } = request.query as z.infer<typeof syncTopStatsQuerySchema>
 
   const refreshTokenUseCase = makeSyncTopStatsUseCase()
 

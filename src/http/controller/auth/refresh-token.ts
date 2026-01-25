@@ -4,16 +4,13 @@ import { makeRefreshTokenUseCase } from '../../../services/factories/make-refres
 import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
 import { RefreshTokenExpiredError } from '../../../services/errors/refresh-token-expired-error'
 import { AxiosError } from 'axios'
+import { refreshTokenQuerySchema } from './schemas/refresh-token.schema'
 
 export async function refreshToken(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const authenticateQuerySchema = z.object({
-    id: z.uuid(),
-  })
-
-  const { id } = authenticateQuerySchema.parse(request.query)
+  const { id } = request.query as z.infer<typeof refreshTokenQuerySchema>
 
   const refreshTokenUseCase = makeRefreshTokenUseCase()
 

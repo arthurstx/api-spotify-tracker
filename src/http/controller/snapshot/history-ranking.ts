@@ -4,16 +4,13 @@ import { UserNotFoundError } from '../../../services/errors/user-not-found-error
 import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
 import { makePlayHistoryUseCase } from '../../../services/factories/make-history-ranking'
+import { historyRankingQuerySchema } from './schema/history-ranking.schema'
 
 export async function historyRanking(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const historyRankingQuerySchema = z.object({
-    id: z.uuid(),
-  })
-
-  const { id } = historyRankingQuerySchema.parse(request.query)
+  const { id } = request.query as z.infer<typeof historyRankingQuerySchema>
 
   const playHistoryUseCase = makePlayHistoryUseCase()
 
