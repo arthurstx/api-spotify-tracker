@@ -37,7 +37,10 @@ export class HistoryRankingUseCase {
       throw new UserNotFoundError()
     }
 
-    const existingSnapshot = await this.snapshotsRepository.findLatest(userId)
+    const existingSnapshot = await this.snapshotsRepository.findByUserAndDate(
+      userId,
+      new Date(),
+    )
     if (existingSnapshot) {
       throw new SyncAlreadyDoneError()
     }

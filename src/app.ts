@@ -17,7 +17,7 @@ import dns from 'node:dns'
 import { rankingsRoutes } from './http/controller/rankings/routes'
 import { historyRoutes } from './http/controller/history/routes'
 import { catalogRoutes } from './http/controller/catolog/routes'
-import { userRoutes } from './http/user/routes'
+import { userRoutes } from './http/controller/user/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 

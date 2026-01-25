@@ -4,13 +4,10 @@ import { UserNotFoundError } from '../../../services/errors/user-not-found-error
 import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
 import { makeCheckDailySyncStatusUseCase } from '../../../services/factories/make-check-daily-sync-status-use-case'
+import { getDailyQuerySchema } from './schema/list-available.schema'
 
 export async function syncStatus(request: FastifyRequest, reply: FastifyReply) {
-  const getDailyQuerySchema = z.object({
-    id: z.uuid(),
-  })
-
-  const { id } = getDailyQuerySchema.parse(request.query)
+  const { id } = request.query as z.infer<typeof getDailyQuerySchema>
 
   const checkDailySyncStatusUseCase = makeCheckDailySyncStatusUseCase()
 
