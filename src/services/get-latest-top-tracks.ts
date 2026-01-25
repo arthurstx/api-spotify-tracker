@@ -1,4 +1,3 @@
-import { TimeRange } from '../../generated/prisma/enums'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { TrackRankingReadRepository } from '../repository/track-rankings-repository'
 import { UsersRepository } from '../repository/user-repository'
@@ -7,7 +6,6 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetLatestTopTracksUseCaseRequest {
   userId: string
-  timeRange: TimeRange
 }
 
 interface GetLatestTopTracksUseCaseResponse {
@@ -18,7 +16,7 @@ interface GetLatestTopTracksUseCaseResponse {
     name: string
     imageUrl?: string | null
     position: number
-    artistName: string
+    artistName: string[]
   }>
 }
 
@@ -26,12 +24,11 @@ export class GetLatestTopTracksUseCase {
   constructor(
     private snapshotRepository: SnapShotsRepository,
     private userRepository: UsersRepository,
-    private trackRankingRead: TrackRankingReadRepository
+    private trackRankingRead: TrackRankingReadRepository,
   ) {}
 
   async execute({
     userId,
-    timeRange,
   }: GetLatestTopTracksUseCaseRequest): Promise<GetLatestTopTracksUseCaseResponse> {
     const user = await this.userRepository.findByUserId(userId)
 
@@ -47,7 +44,6 @@ export class GetLatestTopTracksUseCase {
 
     const { track } = await this.trackRankingRead.fetchDailyTracksWithRankings(
       snapshot.id,
-      timeRange
     )
 
     return { snapshotDate: snapshot.createdAt, track }

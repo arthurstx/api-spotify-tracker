@@ -16,16 +16,11 @@ export async function getLatestTrack(
 ) {
   const { id } = request.query as z.infer<typeof getLatestTracksQuerySchema>
 
-  const { timeRange } = request.body as z.infer<
-    typeof getLatestTracksBodySchema
-  >
-
   const GetLatestTopArtistUseCase = makeGetLatestTopTrackUseCase()
 
   try {
     const { track, snapshotDate } = await GetLatestTopArtistUseCase.execute({
       userId: id,
-      timeRange,
     })
     reply.status(200).send({ tracks: track, snapshotDate })
   } catch (err) {

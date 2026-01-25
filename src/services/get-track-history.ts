@@ -1,4 +1,3 @@
-import { TimeRange } from '../../generated/prisma/enums'
 import { TrackRankingReadRepository } from '../repository/track-rankings-repository'
 import { TrackReadRepository } from '../repository/tracks-repository'
 import { UsersRepository } from '../repository/user-repository'
@@ -8,7 +7,6 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 interface GetTrackHistoryUseCaseRequest {
   userId: string
   trackId: string
-  timeRange?: TimeRange
 }
 
 interface GetTrackHistoryUseCaseResponse {
@@ -22,7 +20,6 @@ interface GetTrackHistoryUseCaseResponse {
   history: Array<{
     date: Date
     position: number
-    timeRange: TimeRange
   }>
 }
 
@@ -30,13 +27,12 @@ export class GetTrackHistoryUseCase {
   constructor(
     private trackReadRepository: TrackReadRepository,
     private userRepository: UsersRepository,
-    private trackRankingRead: TrackRankingReadRepository
+    private trackRankingRead: TrackRankingReadRepository,
   ) {}
 
   async execute({
     userId,
     trackId,
-    timeRange,
   }: GetTrackHistoryUseCaseRequest): Promise<GetTrackHistoryUseCaseResponse> {
     const user = await this.userRepository.findByUserId(userId)
 
@@ -50,11 +46,7 @@ export class GetTrackHistoryUseCase {
       throw new TrackNotFoundError()
     }
 
-    const history = await this.trackRankingRead.fetchHistory(
-      userId,
-      trackId,
-      timeRange ? timeRange : TimeRange.MEDIUM_TERM
-    )
+    const history = await this.trackRankingRead.fetchHistory(userId, trackId)
 
     return { track, history }
   }

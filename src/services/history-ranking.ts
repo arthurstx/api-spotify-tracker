@@ -6,7 +6,6 @@ import { ArtistRankingsRepository } from '../repository/artist-rankings-reposito
 import { TrackRankingsRepository } from '../repository/track-rankings-repository'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { TracksRepository } from '../repository/tracks-repository'
-import { TimeRange } from '../../generated/prisma/enums'
 import { SyncAlreadyDoneError } from './errors/sync-already-done-error'
 
 interface HistoryRankingUseCaseRequest {
@@ -80,7 +79,6 @@ export class HistoryRankingUseCase {
         snapshotId: snapshot.id,
         artistId: artist.spotifyId,
         position: index + 1,
-        timeRange: TimeRange.SHORT_TERM, // TODO: fix me
       }))
       .slice(0, 30)
 
@@ -90,7 +88,6 @@ export class HistoryRankingUseCase {
         trackId: track.spotifyId,
         snapshotId: snapshot.id,
         position: index + 1,
-        timeRange: TimeRange.SHORT_TERM, // TODO: fix me
       }))
       .slice(0, 30)
 
@@ -103,6 +100,6 @@ export class HistoryRankingUseCase {
 
     console.log(artistRankingResult, trackRankingResult)
 
-    return { count: artistRankingResult + trackRankingResult } // TODO: fix me
+    return { count: artistRankingResult + trackRankingResult }
   }
 }

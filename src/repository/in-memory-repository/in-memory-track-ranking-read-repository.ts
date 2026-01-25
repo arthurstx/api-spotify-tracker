@@ -1,7 +1,6 @@
 import {
   Artist,
   Snapshot,
-  TimeRange,
   Track,
   TrackArtist,
   TrackRanking,
@@ -9,11 +8,12 @@ import {
 import {
   FormatedTracks,
   TrackRankingReadRepository,
-} from '../track-ranking-read-repository'
+} from '../track-rankings-repository'
 
-export class InMemoryTrackRankingReadRepository
-  implements TrackRankingReadRepository
-{
+export class InMemoryTrackRankingReadRepository implements TrackRankingReadRepository {
+  fetchDailyTracksWithRankings(snapshotId: string): Promise<FormatedTracks> {
+    throw new Error('Method not implemented.')
+  }
   public tracksArtist: TrackArtist[] = []
   public tracks: Track[] = []
   public rankings: TrackRanking[] = []
@@ -22,10 +22,9 @@ export class InMemoryTrackRankingReadRepository
 
   async fetchDailyArtistsWithRankings(
     snapshotId: string,
-    timeRange: TimeRange
   ): Promise<FormatedTracks> {
     const trackRankings = this.rankings.filter(
-      (r) => r.snapshotId === snapshotId && r.timeRange === timeRange
+      (r) => r.snapshotId === snapshotId,
     )
 
     const track = trackRankings
@@ -54,24 +53,20 @@ export class InMemoryTrackRankingReadRepository
     return { track }
   }
 
-  async fetchHistory(userId: string, trackId: string, timeRange?: TimeRange) {
+  async fetchHistory(userId: string, trackId: string) {
     const userSnapshotIds = this.snapshots
       .filter((s) => s.userId === userId)
       .map((s) => s.id)
 
     const history = this.rankings
       .filter(
-        (r) =>
-          userSnapshotIds.includes(r.snapshotId) &&
-          r.trackId === trackId &&
-          (!timeRange || r.timeRange === timeRange)
+        (r) => userSnapshotIds.includes(r.snapshotId) && r.trackId === trackId,
       )
       .map((r) => {
         const snapshot = this.snapshots.find((s) => s.id === r.snapshotId)!
         return {
           date: snapshot.date,
           position: r.position,
-          timeRange: r.timeRange,
         }
       })
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

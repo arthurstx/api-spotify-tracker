@@ -5,8 +5,8 @@ import {
 } from '../provider/spotify-provider-types'
 import { UsersRepository } from '../repository/user-repository'
 import { RefreshTokenUseCase } from './refresh-token'
-import { TimeRange } from '../../generated/prisma/browser'
 import { UserNotFoundError } from './errors/user-not-found-error'
+import { TimeRange } from '../http/providers/spotify-provider/spotify-http-provider'
 
 interface GetTopItemsUseCaseRequest {
   userId: string

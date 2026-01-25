@@ -38,11 +38,8 @@ app.register(fastifySwagger, {
       version: '1.0.0',
     },
   },
-  transform: jsonSchemaTransform,
-})
 
-app.register(ScalarApiReference, {
-  routePrefix: '/docs',
+  transform: jsonSchemaTransform,
 })
 
 /**----- Routes -----*/
@@ -53,6 +50,14 @@ app.register(rankingsRoutes)
 app.register(historyRoutes)
 app.register(catalogRoutes)
 app.register(userRoutes)
+
+app.get('/openapi.json', async () => {
+  return app.swagger()
+})
+
+app.register(ScalarApiReference, {
+  routePrefix: '/docs',
+})
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

@@ -1,4 +1,4 @@
-import { TimeRange, TrackRanking } from '../../../generated/prisma/browser'
+import { TrackRanking } from '../../../generated/prisma/browser'
 import { TrackRankingUncheckedCreateInput } from '../../../generated/prisma/models'
 import { prisma } from '../../lib/prisma'
 import {
@@ -13,13 +13,11 @@ export class PrismaTrackRankingsRepository
 {
   async fetchManyTrackRankings({
     snapShotId,
-    timeRange,
     trackId,
   }: TrackRankingsProps): Promise<TrackRanking[] | []> {
     const trackRanking = prisma.trackRanking.findMany({
       where: {
         trackId,
-        timeRange,
         snapshot: {
           id: snapShotId,
         },
@@ -50,11 +48,9 @@ export class PrismaTrackRankingsRepository
   }
   async fetchDailyTracksWithRankings(
     snapshotId: string,
-    timeRange: TimeRange,
   ): Promise<FormatedTracks> {
     const unformattedTrackRanking = await prisma.trackRanking.findMany({
       where: {
-        timeRange,
         snapshot: {
           id: snapshotId,
         },
@@ -93,17 +89,15 @@ export class PrismaTrackRankingsRepository
     return { track }
   }
 
-  async fetchHistory(userId: string, trackId: string, timeRange?: TimeRange) {
+  async fetchHistory(userId: string, trackId: string) {
     const unformattedHistory = await prisma.trackRanking.findMany({
       where: {
         trackId,
-        timeRange,
         snapshot: {
           userId,
         },
       },
       select: {
-        timeRange: true,
         position: true,
         snapshot: {
           select: {
@@ -117,7 +111,6 @@ export class PrismaTrackRankingsRepository
       return {
         date: uh.snapshot.createdAt,
         position: uh.position,
-        timeRange: uh.timeRange,
       }
     })
 

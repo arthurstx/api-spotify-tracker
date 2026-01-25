@@ -10,8 +10,9 @@ import {
 export async function topHistory(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.query as z.infer<typeof topHistoryQuerySchema>
 
-  const { entityId, entityType, periodInDays, timeRange } =
-    request.body as z.infer<typeof topHistoryBodySchema>
+  const { entityId, entityType, periodInDays } = request.body as z.infer<
+    typeof topHistoryBodySchema
+  >
 
   const GetHistoryUseCase = makeGetTopHistoryUseCase()
 
@@ -21,7 +22,6 @@ export async function topHistory(request: FastifyRequest, reply: FastifyReply) {
       entityId,
       entityType,
       periodInDays,
-      timeRange, // TODO : fix me
     })
     reply.status(200).send({ history })
   } catch (err) {

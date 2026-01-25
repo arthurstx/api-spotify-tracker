@@ -1,4 +1,4 @@
-import { ArtistRanking, TimeRange } from '../../../generated/prisma/browser'
+import { ArtistRanking } from '../../../generated/prisma/browser'
 import { ArtistRankingUncheckedCreateInput } from '../../../generated/prisma/models'
 import { prisma } from '../../lib/prisma'
 import {
@@ -11,18 +11,16 @@ import {
 export class PrismaArtistsRankingsRepository
   implements ArtistRankingsRepository, ArtistRankingsReadRepository
 {
-  async fetchHistory(userId: string, artistId: string, timeRange?: TimeRange) {
+  async fetchHistory(userId: string, artistId: string) {
     const unformattedHistory = await prisma.artistRanking.findMany({
       where: {
         artistId,
-        timeRange,
         snapshot: {
           userId,
         },
       },
       select: {
         position: true,
-        timeRange: true,
         snapshot: {
           select: {
             createdAt: true,
@@ -35,7 +33,6 @@ export class PrismaArtistsRankingsRepository
       return {
         date: uh.snapshot.createdAt,
         position: uh.position,
-        timeRange: uh.timeRange ?? undefined,
       }
     })
 
@@ -44,11 +41,9 @@ export class PrismaArtistsRankingsRepository
 
   async fetchDailyArtistsWithRankings(
     snapshotId: string,
-    timeRange: TimeRange,
   ): Promise<FormatedArtists> {
     const unformattedArtistRanking = await prisma.artistRanking.findMany({
       where: {
-        timeRange,
         snapshotId,
       },
       select: {
@@ -77,12 +72,10 @@ export class PrismaArtistsRankingsRepository
   async fetchManyArtistRankings({
     artistId,
     snapShotId,
-    timeRange,
   }: ArtistRankingsProps): Promise<ArtistRanking[]> {
     const artistRanking = await prisma.artistRanking.findMany({
       where: {
         artistId,
-        timeRange,
         snapshotId: snapShotId,
       },
     })

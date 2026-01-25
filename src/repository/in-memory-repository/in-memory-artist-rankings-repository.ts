@@ -16,7 +16,6 @@ export class InMemoryArtistRankingRepository
       (item) =>
         props.artistId === item.artistId &&
         props.snapShotId === item.snapshotId &&
-        item.timeRange === props.timeRange
     )
 
     return ArtistRanking
@@ -27,7 +26,6 @@ export class InMemoryArtistRankingRepository
       artistId: item.artistId,
       position: item.position,
       snapshotId: item.snapshotId,
-      timeRange: item.timeRange,
     }))
     this.items.push(...artistRankings)
 

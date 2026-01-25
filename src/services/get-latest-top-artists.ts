@@ -1,4 +1,3 @@
-import { TimeRange } from '../../generated/prisma/enums'
 import { ArtistRankingsReadRepository } from '../repository/artist-rankings-repository'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
 import { UsersRepository } from '../repository/user-repository'
@@ -7,7 +6,6 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 
 interface GetLatestTopArtistsseCaseRequest {
   userId: string
-  timeRange: TimeRange
 }
 
 interface GetLatestTopArtistsseCaseResponse {
@@ -25,12 +23,11 @@ export class GetLatestTopArtistsseCase {
   constructor(
     private snapshotRepository: SnapShotsRepository,
     private userRepository: UsersRepository,
-    private artistRankingsRead: ArtistRankingsReadRepository
+    private artistRankingsRead: ArtistRankingsReadRepository,
   ) {}
 
   async execute({
     userId,
-    timeRange,
   }: GetLatestTopArtistsseCaseRequest): Promise<GetLatestTopArtistsseCaseResponse> {
     const user = await this.userRepository.findByUserId(userId)
 
@@ -45,10 +42,7 @@ export class GetLatestTopArtistsseCase {
     }
 
     const { artist } =
-      await this.artistRankingsRead.fetchDailyArtistsWithRankings(
-        snapshot.id,
-        timeRange ? timeRange : TimeRange.MEDIUM_TERM
-      )
+      await this.artistRankingsRead.fetchDailyArtistsWithRankings(snapshot.id)
 
     return { snapshotDate: snapshot.createdAt, artist }
   }

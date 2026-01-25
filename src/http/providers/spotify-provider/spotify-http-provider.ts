@@ -4,7 +4,12 @@ import {
   SpotifyProvider,
   SpotifyProviderAuthenticationResponse,
 } from '../../../provider/spotify-provider-types'
-import { TimeRange } from '../../../../generated/prisma/enums'
+
+export enum TimeRange {
+  SHORT_TERM = 'SHORT_TERM',
+  MEDIUM_TERM = 'MEDIUM_TERM',
+  LONG_TERM = 'LONG_TERM',
+}
 
 interface tokenResponse {
   access_token: string

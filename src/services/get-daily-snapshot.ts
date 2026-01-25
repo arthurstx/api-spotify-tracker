@@ -1,4 +1,3 @@
-import { TimeRange } from '../../generated/prisma/browser'
 import {
   ArtistRankingsReadRepository,
   FormatedArtists,
@@ -16,7 +15,6 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 interface GetDailySnapshotUseCaseRequest {
   userId: string
   snapshotDate: Date
-  timeRange: TimeRange
 }
 
 interface GetDailySnapshotUseCaseResponse {
@@ -30,12 +28,11 @@ export class GetDailySnapshotUseCase {
     private usersRepository: UsersRepository,
     private artistRankingRead: ArtistRankingsReadRepository,
     private trackRankingRead: TrackRankingReadRepository,
-    private snapShotRepository: SnapShotsRepository
+    private snapShotRepository: SnapShotsRepository,
   ) {}
 
   async execute({
     snapshotDate,
-    timeRange,
     userId,
   }: GetDailySnapshotUseCaseRequest): Promise<GetDailySnapshotUseCaseResponse> {
     const user = await this.usersRepository.findByUserId(userId)
@@ -46,7 +43,7 @@ export class GetDailySnapshotUseCase {
 
     const snapShot = await this.snapShotRepository.findByUserAndDate(
       userId,
-      snapshotDate
+      snapshotDate,
     )
 
     if (!snapShot) {
@@ -54,14 +51,10 @@ export class GetDailySnapshotUseCase {
     }
 
     const { artist } =
-      await this.artistRankingRead.fetchDailyArtistsWithRankings(
-        snapShot.id,
-        timeRange
-      )
+      await this.artistRankingRead.fetchDailyArtistsWithRankings(snapShot.id)
 
     const { track } = await this.trackRankingRead.fetchDailyTracksWithRankings(
       snapShot.id,
-      timeRange
     )
 
     return {

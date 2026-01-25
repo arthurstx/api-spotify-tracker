@@ -16,16 +16,11 @@ export async function getLatestArtists(
 ) {
   const { id } = request.query as z.infer<typeof getLatestArtistsQuerySchema>
 
-  const { timeRange } = request.body as z.infer<
-    typeof getLatestArtistsBodySchema
-  >
-
   const GetLatestTopArtistUseCase = makeGetLatestTopArtistsUseCase()
 
   try {
     const { artist, snapshotDate } = await GetLatestTopArtistUseCase.execute({
       userId: id,
-      timeRange,
     })
     reply.status(200).send({ artists: artist, snapshotDate })
   } catch (err) {

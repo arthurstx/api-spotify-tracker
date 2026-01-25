@@ -1,8 +1,14 @@
 import { FastifyInstance } from 'fastify'
 import { listTrack } from './list-track'
 import { listArtist } from './list-artist'
-import { listArtistQuerySchema } from './schema/list-artist.schema'
-import { listTrackQuerySchema } from './schema/list-track.schema'
+import {
+  listArtistQuerySchema,
+  listArtistResponseSchema,
+} from './schema/list-artist.schema'
+import {
+  listTrackQuerySchema,
+  listTrackResponseSchema,
+} from './schema/list-track.schema'
 
 export async function catalogRoutes(app: FastifyInstance) {
   app.get(
@@ -10,7 +16,7 @@ export async function catalogRoutes(app: FastifyInstance) {
     {
       schema: {
         querystring: listTrackQuerySchema,
-        response: { 200: listTrackQuerySchema },
+        response: { 200: listTrackResponseSchema },
       },
     },
     listTrack,
@@ -20,7 +26,7 @@ export async function catalogRoutes(app: FastifyInstance) {
     {
       schema: {
         querystring: listArtistQuerySchema,
-        response: { 200: listArtistQuerySchema },
+        response: { 200: listArtistResponseSchema },
       },
     },
     listArtist,

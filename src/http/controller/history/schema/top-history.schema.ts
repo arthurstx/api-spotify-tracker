@@ -1,5 +1,4 @@
 import z from 'zod'
-import { TimeRange } from '../../../../../generated/prisma/enums'
 
 export enum EntityType {
   ARTIST = 'ARTIST',
@@ -15,10 +14,7 @@ export const topHistoryBodySchema = z.object({
     .enum(EntityType)
     .describe('The entity type, can be ARTIST or TRACK'),
   entityId: z.string().describe('The unique identifier of the entity'),
-  timeRange: z
-    .enum(TimeRange)
-    .optional()
-    .describe('The time range to filter the history'),
+
   periodInDays: z.number().describe('The period in days to filter the history'),
 })
 

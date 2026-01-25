@@ -5,12 +5,15 @@ import { AxiosError } from 'axios'
 import { SyncAlreadyDoneError } from '../../../services/errors/sync-already-done-error'
 import { SnapshotNotFoundError } from '../../../services/errors/snapshot-not-found-error'
 import { makeGetTopItemsUseCase } from '../../../services/factories/make-get-top-tems'
-import { getItemsBodySchema, getItemsQuerySchema } from './schema/get-items.schema'
+import {
+  getItemsBodySchema,
+  getItemsQuerySchema,
+} from './schema/get-items.schema'
 
 export async function getItems(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.query as z.infer<typeof getItemsQuerySchema>
 
-  const { timeRange, entity } = request.body as z.infer<typeof getItemsBodySchema>
+  const { entity } = request.body as z.infer<typeof getItemsBodySchema>
 
   const getTopItemsUseCase = makeGetTopItemsUseCase()
 
@@ -18,7 +21,6 @@ export async function getItems(request: FastifyRequest, reply: FastifyReply) {
     const { normalizeEntity } = await getTopItemsUseCase.execute({
       userId: id,
       entity,
-      timeRange,
     })
     reply.status(200).send({ items: normalizeEntity })
   } catch (err) {

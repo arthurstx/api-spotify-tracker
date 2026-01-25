@@ -14,9 +14,7 @@ import {
 export async function getDaily(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.query as z.infer<typeof getDailyQuerySchema>
 
-  const { setSnapshotDate, timeRange } = request.body as z.infer<
-    typeof getDailyBodySchema
-  >
+  const { setSnapshotDate } = request.body as z.infer<typeof getDailyBodySchema>
 
   const GetDailySnapshotUseCase = makeGetDailySnapshotUseCase()
 
@@ -24,7 +22,6 @@ export async function getDaily(request: FastifyRequest, reply: FastifyReply) {
     const { artists, tracks, snapshotDate } =
       await GetDailySnapshotUseCase.execute({
         snapshotDate: setSnapshotDate,
-        timeRange,
         userId: id,
       })
     reply.status(200).send({ artists, tracks, snapshotDate })

@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import { TimeRange } from '../../generated/prisma/browser'
 
 import { ArtistRankingsRepository } from '../repository/artist-rankings-repository'
 import { SnapShotsRepository } from '../repository/snapshots-repository'
@@ -11,7 +10,6 @@ interface GetTopHistoryUseCaseRequest {
   userId: string
   entityType: 'ARTIST' | 'TRACK'
   entityId: string
-  timeRange: TimeRange
   periodInDays: number
 }
 
@@ -27,14 +25,13 @@ export class GetTopHistoryUseCase {
     private usersRepository: UsersRepository,
     private artistRankingsRepository: ArtistRankingsRepository,
     private trackRankingsRepository: TrackRankingsRepository,
-    private snapShotRepository: SnapShotsRepository
+    private snapShotRepository: SnapShotsRepository,
   ) {}
 
   async execute({
     entityId,
     entityType,
     periodInDays,
-    timeRange,
     userId,
   }: GetTopHistoryUseCaseRequest): Promise<GetTopHistoryUseCaseResponse> {
     const user = await this.usersRepository.findByUserId(userId)
@@ -49,7 +46,7 @@ export class GetTopHistoryUseCase {
     const snapShots = await this.snapShotRepository.fetchManyByUserIdAndPeriod(
       userId,
       startDate.toDate(),
-      endDate.toDate()
+      endDate.toDate(),
     )
 
     const historyNested = await Promise.all(
@@ -58,7 +55,6 @@ export class GetTopHistoryUseCase {
           const artistsRanking =
             await this.artistRankingsRepository.fetchManyArtistRankings({
               snapShotId: item.id,
-              timeRange,
               artistId: entityId,
             })
 
@@ -70,7 +66,6 @@ export class GetTopHistoryUseCase {
           const trackRanking =
             await this.trackRankingsRepository.fetchManyTrackRankings({
               snapShotId: item.id,
-              timeRange,
               trackId: entityId,
             })
 
@@ -80,7 +75,7 @@ export class GetTopHistoryUseCase {
           }))
         }
         return []
-      })
+      }),
     )
 
     const history = historyNested.flat()

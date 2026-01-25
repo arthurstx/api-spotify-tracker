@@ -2,20 +2,17 @@ import {
   Artist,
   ArtistRanking,
   Snapshot,
-  TimeRange,
 } from '../../../generated/prisma/browser'
 import { ArtistRankingsReadRepository } from '../artist-rankings-repository'
 
-export class InMemoryArtistRankingsReadRepository
-  implements ArtistRankingsReadRepository
-{
+export class InMemoryArtistRankingsReadRepository implements ArtistRankingsReadRepository {
   constructor(
     public artistRankings: ArtistRanking[],
     public artists: Artist[],
-    public snapshot: Snapshot[]
+    public snapshot: Snapshot[],
   ) {}
 
-  async fetchHistory(userId: string, artistId: string, timeRange?: TimeRange) {
+  async fetchHistory(userId: string, artistId: string) {
     const userSnapshotIds = this.snapshot
       .filter((snanpshot) => snanpshot.userId === userId)
       .map((s) => {
@@ -24,9 +21,7 @@ export class InMemoryArtistRankingsReadRepository
 
     const artistRankings = this.artistRankings.filter(
       (ar) =>
-        userSnapshotIds.includes(ar.snapshotId) &&
-        ar.artistId === artistId &&
-        (!timeRange || ar.timeRange === timeRange)
+        userSnapshotIds.includes(ar.snapshotId) && ar.artistId === artistId,
     )
 
     const history = artistRankings.map((ar) => {
@@ -34,19 +29,15 @@ export class InMemoryArtistRankingsReadRepository
       return {
         date: snanpshot.createdAt,
         position: ar.position,
-        TimeRange: ar.timeRange,
       }
     })
 
     return history
   }
 
-  async fetchDailyArtistsWithRankings(
-    snapshotId: string,
-    timeRange: TimeRange
-  ) {
+  async fetchDailyArtistsWithRankings(snapshotId: string) {
     const artist = this.artistRankings
-      .filter((r) => r.snapshotId === snapshotId && r.timeRange === timeRange)
+      .filter((r) => r.snapshotId === snapshotId)
       .map((r) => {
         const newArtist = this.artists.find((a) => a.id === r.artistId)
 

@@ -16,9 +16,7 @@ export async function artistHistory(
 ) {
   const { id } = request.query as z.infer<typeof artistHistoryQuerySchema>
 
-  const { artistId, timeRange } = request.body as z.infer<
-    typeof artistHistoryBodySchema
-  >
+  const { artistId } = request.body as z.infer<typeof artistHistoryBodySchema>
 
   const GetArtistHistoryUseCase = makeGetArtistHistoryUseCase()
 
@@ -26,7 +24,6 @@ export async function artistHistory(
     const { artist, history } = await GetArtistHistoryUseCase.execute({
       userId: id,
       artistId,
-      timeRange, // TODO : fix me
     })
     reply.status(200).send({ artist, history })
   } catch (err) {

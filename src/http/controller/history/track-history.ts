@@ -16,9 +16,7 @@ export async function trackHistory(
 ) {
   const { id } = request.query as z.infer<typeof trackHistoryQuerySchema>
 
-  const { trackId, timeRange } = request.body as z.infer<
-    typeof trackHistoryBodySchema
-  >
+  const { trackId } = request.body as z.infer<typeof trackHistoryBodySchema>
 
   const GetLatestTopArtistUseCase = makeGetTrackHistoryUseCase()
 
@@ -26,7 +24,6 @@ export async function trackHistory(
     const { track, history } = await GetLatestTopArtistUseCase.execute({
       userId: id,
       trackId,
-      timeRange, // TODO : fix me
     })
     reply.status(200).send({ track, history })
   } catch (err) {

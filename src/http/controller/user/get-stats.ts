@@ -1,15 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
-import { makeGetUserStatsUseCase } from '../../services/factories/make-get-user-stats'
-import { UserNotFoundError } from '../../services/errors/user-not-found-error'
-import { SnapshotNotFoundError } from '../../services/errors/snapshot-not-found-error'
+import { makeGetUserStatsUseCase } from '../../../services/factories/make-get-user-stats'
+import { SnapshotNotFoundError } from '../../../services/errors/snapshot-not-found-error'
+import { UserNotFoundError } from '../../../services/errors/user-not-found-error'
+import { getStatsQuerySchema } from './schema/get-stats.schema'
 
 export async function getStats(request: FastifyRequest, reply: FastifyReply) {
-  const getStatsQuerySchema = z.object({
-    id: z.uuid(),
-  })
-
-  const { id } = getStatsQuerySchema.parse(request.query)
+  const { id } = request.query as z.infer<typeof getStatsQuerySchema>
 
   const getUserStatsUseCase = makeGetUserStatsUseCase()
 

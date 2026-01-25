@@ -1,4 +1,3 @@
-import { TimeRange } from '../../generated/prisma/enums'
 import { ArtistRankingsReadRepository } from '../repository/artist-rankings-repository'
 import { ArtistsRepository } from '../repository/artists-repository'
 import { UsersRepository } from '../repository/user-repository'
@@ -8,7 +7,6 @@ import { UserNotFoundError } from './errors/user-not-found-error'
 interface GetArtistHistoryUseCaseRequest {
   userId: string
   artistId: string
-  timeRange?: TimeRange
 }
 
 interface GetArtistHistoryUseCaseResponse {
@@ -21,7 +19,6 @@ interface GetArtistHistoryUseCaseResponse {
   history: Array<{
     date: Date
     position: number
-    timeRange?: TimeRange
   }>
 }
 
@@ -29,13 +26,12 @@ export class GetArtistHistoryUseCase {
   constructor(
     private artistRepository: ArtistsRepository,
     private userRepository: UsersRepository,
-    private artistRankingsRead: ArtistRankingsReadRepository
+    private artistRankingsRead: ArtistRankingsReadRepository,
   ) {}
 
   async execute({
     userId,
     artistId,
-    timeRange,
   }: GetArtistHistoryUseCaseRequest): Promise<GetArtistHistoryUseCaseResponse> {
     const user = await this.userRepository.findByUserId(userId)
 
@@ -49,11 +45,7 @@ export class GetArtistHistoryUseCase {
       throw new ArtistNotFoundError()
     }
 
-    const history = await this.artistRankingsRead.fetchHistory(
-      userId,
-      artistId,
-      timeRange
-    )
+    const history = await this.artistRankingsRead.fetchHistory(userId, artistId)
 
     return { artist, history }
   }

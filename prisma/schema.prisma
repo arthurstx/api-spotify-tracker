@@ -13,12 +13,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum TimeRange {
-  SHORT_TERM
-  MEDIUM_TERM
-  LONG_TERM
-}
-
 model User {
   id          String  @id @default(uuid())
   spotifyId   String  @unique
@@ -91,13 +85,12 @@ model ArtistRanking {
   snapshotId String
   artistId   String
 
-  position  Int
-  timeRange TimeRange
+  position Int
 
   snapshot Snapshot @relation(fields: [snapshotId], references: [id])
   artist   Artist   @relation(fields: [artistId], references: [id])
 
-  @@unique([snapshotId, artistId, timeRange])
+  @@unique([snapshotId, artistId])
 }
 
 model TrackRanking {
@@ -105,11 +98,10 @@ model TrackRanking {
   snapshotId String
   trackId    String
 
-  position  Int
-  timeRange TimeRange
+  position Int
 
   snapshot Snapshot @relation(fields: [snapshotId], references: [id])
   track    Track    @relation(fields: [trackId], references: [id])
 
-  @@unique([snapshotId, trackId, timeRange])
+  @@unique([snapshotId, trackId])
 }

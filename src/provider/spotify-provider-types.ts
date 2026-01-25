@@ -1,4 +1,4 @@
-import { TimeRange } from '../../generated/prisma/enums'
+import { TimeRange } from '../http/providers/spotify-provider/spotify-http-provider'
 
 export interface SpotifyProviderAuthenticationResponse {
   accessToken: string

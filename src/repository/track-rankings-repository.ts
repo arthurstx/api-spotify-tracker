@@ -1,8 +1,7 @@
-import { Prisma, TimeRange, TrackRanking } from '../../generated/prisma/browser'
+import { Prisma, TrackRanking } from '../../generated/prisma/browser'
 
 export interface TrackRankingsProps {
   trackId: string
-  timeRange: TimeRange
   snapShotId: string
 }
 
@@ -18,7 +17,6 @@ export interface TrackRankingsRepository {
 interface history {
   date: Date
   position: number
-  timeRange: TimeRange
 }
 export interface FormatedTracks {
   track: Array<{
@@ -31,13 +29,6 @@ export interface FormatedTracks {
 }
 
 export interface TrackRankingReadRepository {
-  fetchDailyTracksWithRankings(
-    snapshotId: string,
-    timeRange: TimeRange,
-  ): Promise<FormatedTracks>
-  fetchHistory(
-    userId: string,
-    trackId: string,
-    timeRange?: TimeRange,
-  ): Promise<history[]>
+  fetchDailyTracksWithRankings(snapshotId: string): Promise<FormatedTracks>
+  fetchHistory(userId: string, trackId: string): Promise<history[]>
 }

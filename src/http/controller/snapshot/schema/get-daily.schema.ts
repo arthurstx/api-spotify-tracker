@@ -1,5 +1,4 @@
 import z from 'zod'
-import { TimeRange } from '../../../../../generated/prisma/enums'
 
 export const getDailyQuerySchema = z.object({
   id: z.uuid(),
@@ -7,7 +6,6 @@ export const getDailyQuerySchema = z.object({
 
 export const getDailyBodySchema = z.object({
   setSnapshotDate: z.coerce.date(),
-  timeRange: z.enum(TimeRange),
 })
 
 export const getDailyResponseSchema = z.object({
