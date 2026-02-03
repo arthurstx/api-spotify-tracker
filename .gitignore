@@ -3,7 +3,7 @@ node_modules
 .env
 dist
 task.md
-
+coverage
 /generated/prisma
 
 /generated/prisma
